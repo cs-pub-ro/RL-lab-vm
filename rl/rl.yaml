@@ -1,0 +1,55 @@
+# This is a Packer template in an enhanced YAML format
+# It will be transformed into Packer-compatible JSON format by using a Python
+# script.
+
+variables:
+  vm_name: "{{ env `VM_NAME` }}.qcow2"
+  arch: "amd64"
+  base_image: "{{ env `BASE_VM` }}"
+  disk_size: "20000"
+  memory: "1024"
+  cpus: "2"
+  output_directory: "{{ env `OUTPUT_DIR` }}"
+  ssh_username: "student"
+  ssh_password: "student"
+
+builders:
+  - type: "qemu"
+    vm_name: "{{ user `vm_name` }}"
+    iso_url: "{{ user `base_image` }}"
+    iso_checksum: ""
+    iso_checksum_type: none
+    disk_image: true
+    output_directory: "{{ user `output_directory` }}"
+
+    # VM Configuration
+    use_backing_file: true
+    format: "qcow2"
+    net_device: "virtio-net"
+    disk_interface: "ide"
+    disk_size: "{{ user `disk_size` }}"
+    # disk usage optimizations (unmap zeroes as free space)
+    disk_discard: unmap
+    disk_detect_zeroes: unmap
+
+    # Communicator vars
+    communicator: ssh
+    ssh_username: "{{user `ssh_username`}}"
+    ssh_password: "{{user `ssh_password`}}"
+    ssh_port: 22
+    ssh_wait_timeout: "10000s"
+    shutdown_command: "sudo /sbin/shutdown -h now"
+
+provisioners:
+  - type: "file"
+    source: "rl/scripts"
+    destination: "/home/student/install"
+  - type: "shell"
+    inline:
+      - "chmod +x /home/student/install/install.sh"
+      - "/home/student/install/install.sh"
+    execute_command: "{{.Vars}} sudo -E -S sh -e '{{.Path}}'"
+    environment_vars:
+      - "ARCHIVE_MIRROR="
+  - type: "breakpoint"
+
