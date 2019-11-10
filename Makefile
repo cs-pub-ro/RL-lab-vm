@@ -18,6 +18,10 @@ RL_VM_NAME = RL_2019
 RL_PACKER_CONFIG = rl/rl.yaml
 RL_VM_IMAGE = $(TMP_DIR)/$(RL_VM_NAME)/$(RL_VM_NAME).qcow2
 
+RL_CLOUD_NAME = RL_2019_cloud
+RL_CLOUD_PACKER_CONFIG = rl-cloud/rl-cloud.yaml
+RL_CLOUD_IMAGE = $(TMP_DIR)/$(RL_CLOUD_NAME)/$(RL_CLOUD_NAME).qcow2
+
 # include local customizations file
 include local.mk
 
@@ -46,8 +50,22 @@ rl_vm: $(TMP_DIR)/
 		"BASE_VM=$(BASE_VM_IMAGE)" \
 		$(PACKER) build $(PACKER_ARGS) -only=qemu -
 
+RL_VM_IMAGE2 = $(TMP_DIR)/$(RL_VM_NAME)_2/$(RL_VM_NAME)_2.qcow2
+RL_VM_IMAGE_TMP = $(TMP_DIR)/$(RL_VM_NAME)/$(RL_VM_NAME)_tmp.qcow2
+rl_vm_2_integrate:
+	qemu-img convert -f qcow2 -O qcow2 "$(RL_VM_IMAGE2)" "$(RL_VM_IMAGE_TMP)"
+
 rl_ssh:
 	$(SSH) $(SSH_ARGS) student@127.0.0.1 -p 20022
+
+rl_cloud: VM_DIR=$(TMP_DIR)/$(RL_CLOUD_NAME)
+rl_cloud: $(TMP_DIR)/
+	$(if $(DELETE),rm -rf "$(VM_DIR)/",)
+	cat "$(RL_CLOUD_PACKER_CONFIG)" | $(TRANSFORMER) | \
+		env "PACKER_TMP_DIR=$(TMP_DIR)" "PACKER_CACHE_DIR=$(TMP_DIR)/packer_cache/" \
+		"TMPDIR=$(TMP_DIR)" "VM_NAME=$(RL_CLOUD_NAME)" "OUTPUT_DIR=$(VM_DIR)" \
+		"BASE_VM=$(RL_VM_IMAGE)" \
+		$(PACKER) build $(PACKER_ARGS) -only=qemu -
 
 validate:
 	cat "$(BASE_PACKER_CONFIG)" | $(TRANSFORMER) | $(PACKER) validate -

@@ -8,6 +8,7 @@ function go() {
 	[ "$#" -eq 0 ] && echo "$ERROR" >&2 && exit 1
 
 	sudo lxc-console -n "$1"
+	echo  # add a newline before the prompt
 }
 
 function rl() {

@@ -31,7 +31,7 @@ builders:
     # disk usage optimizations (unmap zeroes as free space)
     disk_discard: unmap
     disk_detect_zeroes: unmap
-    skip_compaction: true  # not required anymore
+    skip_compaction: false  # run a qemu-img conversion to flatten the result
     ssh_host_port_min: 20022
     ssh_host_port_max: 20022
 
@@ -46,18 +46,14 @@ builders:
 provisioners:
   - type: "shell"
     inline:
-      - "mkdir -p /home/student/install/"
+      - "mkdir -p /home/student/install_cloud/"
   - type: "file"
-    source: "rl/scripts/"
-    destination: "/home/student/install/"
+    source: "rl-cloud/scripts/"
+    destination: "/home/student/install_cloud/"
   - type: "shell"
     inline:
-      - "chmod +x /home/student/install/install.sh"
-      - "/home/student/install/install.sh"
+      - "chmod +x /home/student/install_cloud/install.sh"
+      - "/home/student/install_cloud/install.sh"
     execute_command: "{{.Vars}} sudo -E -S sh -e '{{.Path}}'"
-  - type: "shell"
-    inline:
-      - "sudo reboot"
-    expect_disconnect: true
-  - type: "breakpoint"
+
 
