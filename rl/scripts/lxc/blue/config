@@ -1,0 +1,24 @@
+# Distribution configuration
+lxc.include = /usr/share/lxc/config/common.conf
+
+# For Ubuntu 14.04
+lxc.mount.entry = /sys/kernel/debug sys/kernel/debug none bind,optional 0 0
+lxc.mount.entry = /sys/kernel/security sys/kernel/security none bind,optional 0 0
+lxc.mount.entry = /sys/fs/pstore sys/fs/pstore none bind,optional 0 0
+lxc.mount.entry = mqueue dev/mqueue mqueue rw,relatime,create=dir,optional 0 0
+lxc.arch = linux64
+
+# Container specific configuration
+lxc.rootfs.path = dir:/var/lib/lxc/blue/rootfs
+lxc.uts.name = blue
+
+# Network configuration
+lxc.net.0.type = veth
+#lxc.net.0.veth.mode = router
+lxc.net.0.veth.pair = veth-blue
+lxc.net.0.flags = up
+lxc.net.0.hwaddr = 00:31:33:77:22:33
+
+lxc.environment = TERM=xterm-256color
+lxc.start.auto = 1
+
