@@ -25,11 +25,6 @@ RL_CLOUD_IMAGE = $(TMP_DIR)/$(RL_CLOUD_NAME)/$(RL_CLOUD_NAME).qcow2
 # include local customizations file
 include local.mk
 
-ifeq ($(USE_EXISTING),1)
-	BASE_VM_IMAGE := $(RL_VM_IMAGE)
-	RL_VM_NAME = RL_2019_2
-endif
-
 base: $(BASE_VM_IMAGE)
 
 $(BASE_VM_IMAGE): VM_DIR=$(TMP_DIR)/$(BASE_VM_NAME)
@@ -65,6 +60,15 @@ rl_cloud: $(TMP_DIR)/
 		env "PACKER_TMP_DIR=$(TMP_DIR)" "PACKER_CACHE_DIR=$(TMP_DIR)/packer_cache/" \
 		"TMPDIR=$(TMP_DIR)" "VM_NAME=$(RL_CLOUD_NAME)" "OUTPUT_DIR=$(VM_DIR)" \
 		"BASE_VM=$(RL_VM_IMAGE)" \
+		$(PACKER) build $(PACKER_ARGS) -only=qemu -
+
+rl_cloud_test: VM_DIR=$(TMP_DIR)/$(RL_CLOUD_NAME)_test
+rl_cloud_test: $(TMP_DIR)/
+	$(if $(DELETE),rm -rf "$(VM_DIR)/",)
+	cat "$(RL_CLOUD_PACKER_CONFIG)" | $(TRANSFORMER) | \
+		env "PACKER_TMP_DIR=$(TMP_DIR)" "PACKER_CACHE_DIR=$(TMP_DIR)/packer_cache/" \
+		"TMPDIR=$(TMP_DIR)" "VM_NAME=$(RL_CLOUD_NAME)_test" "OUTPUT_DIR=$(VM_DIR)" \
+		"BASE_VM=$(RL_CLOUD_IMAGE)" \
 		$(PACKER) build $(PACKER_ARGS) -only=qemu -
 
 validate:
