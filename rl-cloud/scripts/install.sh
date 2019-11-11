@@ -16,9 +16,6 @@ apt-get install -y cloud-init
 # copy the cloud-init config
 rsync -avh --chown="root:root" "$SRC/etc/" "/etc/"
 
-mkdir -p /var/lib/cloud/instance/warnings/
-touch /var/lib/cloud/instance/warnings/.skip
-
 # Cleanup the system
 rm -rf /home/student/install*
 
