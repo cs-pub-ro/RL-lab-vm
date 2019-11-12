@@ -9,3 +9,6 @@ VMWARE_ISO = $(HOME)/Downloads/VMware-Tools-core-10.3.2-9925305.zip
 # Make sure you have >10GB free space!
 TMP_DIR=/tmp/packer
 
+# SSH args (prevent host key warnings)
+SSH_ARGS=-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
+

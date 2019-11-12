@@ -3,9 +3,9 @@
 # script.
 
 variables:
-  vm_name: "{{ env `VM_NAME` }}.qcow2"
+  vm_name: "{{ env `VM_NAME` }}"
   arch: "amd64"
-  iso_url: "{{ env `OS_INSTALL_ISO` }}"
+  iso_url: "{{ env `SOURCE_IMAGE` }}"
   iso_checksum_type: "none"
   iso_checksum: ""
   use_disk_image: "false"
@@ -24,7 +24,7 @@ variables:
 
 builders:
   - type: "qemu"
-    vm_name: "{{ user `vm_name` }}"
+    vm_name: "{{ user `vm_name` }}.qcow2"
     iso_url: "{{ user `iso_url` }}"
     iso_checksum_type: "{{ user `iso_checksum_type` }}"
     iso_checksum: "{{ user `iso_checksum` }}"
@@ -70,7 +70,7 @@ builders:
     ssh_username: "{{user `ssh_username`}}"
     ssh_password: "{{user `ssh_password`}}"
     ssh_port: 22
-    ssh_wait_timeout: "10000s"
+    ssh_timeout: "30m"
     shutdown_command: "sudo /sbin/shutdown -h now"
 
 provisioners:

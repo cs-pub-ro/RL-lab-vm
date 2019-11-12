@@ -27,7 +27,7 @@ _copy_home_config() {
 	# copy tmux config
 	mkdir -p "$1"/.config/tmux/
 	rsync -avh --chown="$2:$2" "$SRC/files/home/tmux/" "$1/.config/tmux/"
-	ln -s "$1/.config/tmux/tmux.conf" "$1/.tmux.conf"
+	ln -sf "$1/.config/tmux/tmux.conf" "$1/.tmux.conf"
 	chown "$2:$2" "$1/.tmux.conf"
 }
 _copy_home_config /root root

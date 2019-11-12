@@ -3,9 +3,9 @@
 # script.
 
 variables:
-  vm_name: "{{ env `VM_NAME` }}.qcow2"
+  vm_name: "{{ env `VM_NAME` }}"
   arch: "amd64"
-  base_image: "{{ env `BASE_VM` }}"
+  base_image: "{{ env `SOURCE_IMAGE` }}"
   disk_size: "5000"
   memory: "1024"
   cpus: "2"
@@ -15,7 +15,7 @@ variables:
 
 builders:
   - type: "qemu"
-    vm_name: "{{ user `vm_name` }}"
+    vm_name: "{{ user `vm_name` }}.qcow2"
     iso_url: "{{ user `base_image` }}"
     iso_checksum: ""
     iso_checksum_type: none
@@ -40,7 +40,7 @@ builders:
     ssh_username: "{{user `ssh_username`}}"
     ssh_password: "{{user `ssh_password`}}"
     ssh_port: 22
-    ssh_wait_timeout: "10000s"
+    ssh_timeout: "5m"
     shutdown_command: "sudo /sbin/shutdown -h now"
 
 provisioners:
@@ -55,5 +55,4 @@ provisioners:
       - "chmod +x /home/student/install_cloud/install.sh"
       - "/home/student/install_cloud/install.sh"
     execute_command: "{{.Vars}} sudo -E -S sh -e '{{.Path}}'"
-
 
