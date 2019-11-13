@@ -33,7 +33,8 @@ _copy_home_config() {
 _copy_home_config /root root
 _copy_home_config /home/student student
 
-# Use old interface names (ethX)
-sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
+# Use old interface names (ethX) + disable qxl modeset (spice is buggy)
+GRUB_CMDLINE_LINUX="quiet net.ifnames=0 biosdevname=0 nomodeset"
+sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"$GRUB_CMDLINE_LINUX\"/g" /etc/default/grub
 update-grub
 
