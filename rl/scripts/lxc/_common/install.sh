@@ -42,5 +42,5 @@ dpkg-reconfigure locales
 # upgrade and install packages
 apt-get update && apt-get -y upgrade
 apt-get -y install rsync openssh-server curl wget bash-completion tree vim \
-	neovim ifupdown traceroute tcpdump rsync s-nail
+	neovim nano ifupdown traceroute tcpdump rsync s-nail
 

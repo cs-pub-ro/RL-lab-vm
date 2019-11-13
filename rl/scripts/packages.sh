@@ -12,6 +12,7 @@ dpkg-reconfigure locales
 
 apt-get update
 apt-get -y upgrade
-apt-get install -y open-vm-tools lxc bridge-utils tree tmux vim neovim \
-	iproute2 ifupdown traceroute tcpdump rsync s-nail bash-completion
+apt-get install -y open-vm-tools lxc bridge-utils tree tmux vim nano neovim \
+	iproute2 ifupdown traceroute tcpdump rsync s-nail bash-completion \
+	docker.io docker-compose
 
