@@ -28,7 +28,7 @@ for name in "${CONTAINERS[@]}"; do
 done
 
 # copy container configuration scripts
-function lxc_container_copy_configs()
+function lxc_container_prepare()
 {
 	local lxc_dir=/var/lib/lxc/$1
 	local lxc_src="$SRC/lxc/$1"
@@ -40,8 +40,14 @@ function lxc_container_copy_configs()
 	rsync -ai --exclude /config "$lxc_common/" "$lxc_src/" "$lxc_dir/rootfs/"
 	rsync -ai "$SRC/files/home/bashrc" "$lxc_dir/rootfs/home/.bashrc"
 	chmod 755 "$lxc_dir/rootfs/install.sh"
+	# disable systemd-networkd
+	ln -sf /dev/null "$lxc_dir/rootfs/etc/systemd/system/systemd-networkd.service"
+	ln -sf /dev/null "$lxc_dir/rootfs/etc/systemd/system/systemd-networkd-wait-online.service"
 	# start the container
 	lxc-start -d -n "$1"
+}
+function lxc_container_install()
+{
 	# configure networking
 	ip addr add "10.90.$2.1/24" dev veth-"$1"
 	# run the installation script
@@ -50,12 +56,16 @@ function lxc_container_copy_configs()
 
 # enable forwarding and NAT
 sysctl -w net.ipv4.ip_forward=1
-iptables -t nat -A POSTROUTING -j MASQUERADE
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 
+for name in "${CONTAINERS[@]}"; do
+	echo "Preparing LXC container $name..." >&2
+	lxc_container_prepare "$name"
+done
 i=1
 for name in "${CONTAINERS[@]}"; do
 	echo "Configuring LXC container $name..." >&2
-	lxc_container_copy_configs "$name" "$i"
+	lxc_container_install "$name" "$i"
 	i=$(( $i + 1 ))
 done
 
