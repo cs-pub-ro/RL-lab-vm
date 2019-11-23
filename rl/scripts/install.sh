@@ -14,4 +14,5 @@ while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && \
 "$SRC/packages.sh"
 "$SRC/tweaks.sh"
 "$SRC/lxc.sh"
+"$SRC/services.sh"
 
