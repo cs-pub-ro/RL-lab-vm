@@ -2,7 +2,6 @@
 # LXC configuration script
 # To be ran inside the containers, as root
 set -e
-set -x
 
 export SRC="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
 i=$1
@@ -42,5 +41,7 @@ dpkg-reconfigure locales
 # upgrade and install packages
 apt-get update && apt-get -y upgrade
 apt-get -y install rsync openssh-server curl wget bash-completion tree vim \
-	neovim nano ifupdown traceroute tcpdump rsync s-nail
+	neovim nano ifupdown traceroute tcpdump rsync s-nail vsftpd telnetd \
+	net-tools mailutils sharutils dnsutils
+
 
