@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-set -x
 
 # Root password
 echo 'root:student' | chpasswd
@@ -13,8 +12,8 @@ hostnamectl set-hostname host
 sed -i "s/^127.0.1.1\s.*/127.0.1.1       host/g"  /etc/hosts
 
 # Copy configs
-rsync -avh --chown="root:root" "$SRC/files/etc/" /etc/
-rsync -avh --chown="root:root" "$SRC/files/opt/" /opt/
+rsync -ai --chown="root:root" "$SRC/files/etc/" /etc/
+rsync -ai --chown="root:root" "$SRC/files/opt/" /opt/
 chmod 755 /etc/rc.local
 chmod 755 /etc/network/interfaces
 
@@ -26,7 +25,7 @@ _copy_home_config() {
 	chown "$2:$2" "$1"/.bashrc
 	# copy tmux config
 	mkdir -p "$1"/.config/tmux/
-	rsync -avh --chown="$2:$2" "$SRC/files/home/tmux/" "$1/.config/tmux/"
+	rsync -ai --chown="$2:$2" "$SRC/files/home/tmux/" "$1/.config/tmux/"
 	ln -sf "$1/.config/tmux/tmux.conf" "$1/.tmux.conf"
 	chown "$2:$2" "$1/.tmux.conf"
 }

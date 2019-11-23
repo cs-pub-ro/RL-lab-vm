@@ -14,7 +14,7 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get install -y cloud-init
 # copy the cloud-init config
-rsync -avh --chown="root:root" "$SRC/etc/" "/etc/"
+rsync -ai --chown="root:root" "$SRC/etc/" "/etc/"
 
 # disable ssh password login
 sed -i "s/.*PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config

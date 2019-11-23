@@ -37,8 +37,8 @@ function lxc_container_copy_configs()
 	lxc-stop -q -n "$1" || true
 	# copy the configuration files
 	cp -f "$lxc_src/config" "$lxc_dir/config"
-	rsync -avh --exclude /config "$lxc_common/" "$lxc_src/" "$lxc_dir/rootfs/"
-	rsync -avh "$SRC/files/home/bashrc" "$lxc_dir/rootfs/home/.bashrc"
+	rsync -ai --exclude /config "$lxc_common/" "$lxc_src/" "$lxc_dir/rootfs/"
+	rsync -ai "$SRC/files/home/bashrc" "$lxc_dir/rootfs/home/.bashrc"
 	chmod 755 "$lxc_dir/rootfs/install.sh"
 	# start the container
 	lxc-start -d -n "$1"

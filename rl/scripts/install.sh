@@ -2,7 +2,6 @@
 # Main RL VM provisioning entrypoint
 # Everything should run as root
 set -e
-set -x
 
 export SRC="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
 
