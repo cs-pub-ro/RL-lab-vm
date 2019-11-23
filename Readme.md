@@ -39,6 +39,13 @@ order):
 - `rl_ssh`: SSH-es into a running Packer VM (use with the `_edit` target
   to test it);
 
+If packer complains about the output file existing, you must either manually
+delete the generated VM from inside `TMP_DIR`, or set the `DELETE=1` makefile
+variable (but be careful):
+```sh
+make DELETE=1 rl_scripts_edit
+```
+
 ## TODO
 
 Still TODO: image conversion and project generation for VMWare / VirtualBox
