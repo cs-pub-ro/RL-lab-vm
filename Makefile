@@ -58,7 +58,7 @@ $(RL_SCRIPTS_VM_IMAGE): $(BASE_VM_IMAGE)
 
 # VM backing an already generated RL scripts image (saving time to edit it)
 rl_scripts_edit: _TRANSFORM_ARGS=--add-breakpoint
-rl_scripts_edit: $(RL_SCRIPTS_VM_IMAGE)
+rl_scripts_edit: | $(RL_SCRIPTS_VM_IMAGE)
 	$(call packer_gen_build, $(RL_SCRIPTS_PACKER_CONFIG), \
 		$(RL_SCRIPTS_VM_NAME)_tmp, $(RL_SCRIPTS_VM_IMAGE))
 # commits the edited image back to the original

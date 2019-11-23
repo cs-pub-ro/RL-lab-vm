@@ -4,13 +4,6 @@ set -e
 # Root password
 echo 'root:student' | chpasswd
 
-# Disable UFW
-systemctl disable ufw
-
-# Change hostname to host
-hostnamectl set-hostname host
-sed -i "s/^127.0.1.1\s.*/127.0.1.1       host/g"  /etc/hosts
-
 # Copy configs
 rsync -ai --chown="root:root" "$SRC/files/etc/" /etc/
 rsync -ai --chown="root:root" "$SRC/files/opt/" /opt/
@@ -31,9 +24,4 @@ _copy_home_config() {
 }
 _copy_home_config /root root
 _copy_home_config /home/student student
-
-# Use old interface names (ethX) + disable qxl modeset (spice is buggy)
-GRUB_CMDLINE_LINUX="quiet net.ifnames=0 biosdevname=0 nomodeset"
-sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"$GRUB_CMDLINE_LINUX\"/g" /etc/default/grub
-update-grub
 

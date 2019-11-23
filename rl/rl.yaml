@@ -6,7 +6,7 @@ variables:
   vm_name: "{{ env `VM_NAME` }}"
   arch: "amd64"
   base_image: "{{ env `SOURCE_IMAGE` }}"
-  disk_size: "5000"
+  disk_size: "8000"
   memory: "1024"
   cpus: "2"
   output_directory: "{{ env `OUTPUT_DIR` }}"
@@ -40,7 +40,7 @@ builders:
     ssh_username: "{{user `ssh_username`}}"
     ssh_password: "{{user `ssh_password`}}"
     ssh_port: 22
-    ssh_timeout: "5m"
+    ssh_timeout: "8m"
     shutdown_command: "sudo /sbin/shutdown -h now"
 
 provisioners:
@@ -52,11 +52,13 @@ provisioners:
     destination: "/home/student/install/"
   - type: "shell"
     inline:
+      - "chmod +x /home/student/install/install-base.sh"
+      - "/home/student/install/install-base.sh"
+    execute_command: "{{.Vars}} sudo -E -S sh -e '{{.Path}}'"
+    expect_disconnect: true
+  - type: "shell"
+    inline:
       - "chmod +x /home/student/install/install.sh"
       - "/home/student/install/install.sh"
     execute_command: "{{.Vars}} sudo -E -S sh -e '{{.Path}}'"
-  - type: "shell"
-    inline:
-      - "sudo reboot"
-    expect_disconnect: true
 
