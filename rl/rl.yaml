@@ -12,6 +12,7 @@ variables:
   output_directory: "{{ env `OUTPUT_DIR` }}"
   ssh_username: "student"
   ssh_password: "student"
+  rl_debug:
 
 builders:
   - type: "qemu"
@@ -61,4 +62,6 @@ provisioners:
       - "chmod +x /home/student/install/install.sh"
       - "/home/student/install/install.sh"
     execute_command: "{{.Vars}} sudo -E -S sh -e '{{.Path}}'"
+    environment_vars:
+     - "RL_DEBUG={{user `rl_debug`}}"
 

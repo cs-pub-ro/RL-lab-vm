@@ -16,3 +16,10 @@ while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && \
 "$SRC/lxc.sh"
 "$SRC/services.sh"
 
+if [[ "$RL_DEBUG" != "1" ]]; then
+	# Cleanup the system
+	rm -rf /home/student/install*
+	rm -f /home/student/.bash_history
+	rm -f /root/.bash_history
+fi
+

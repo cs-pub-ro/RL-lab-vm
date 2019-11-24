@@ -5,10 +5,12 @@ TMP_DIR = /tmp/packer
 OS_INSTALL_ISO = REQUIRED
 
 PACKER = packer
-PACKER_ARGS = -on-error=abort
+PACKER_ARGS = -on-error=abort -var "rl_debug=$(DEBUG)"
 TRANSFORMER = ./build-scripts/packer_transform.py
 SSH = ssh
 SSH_ARGS = 
+DEBUG =  # set to 1 to keep the files at the end of the operation
+PAUSE = $(DEBUG)
 
 # Fresh Ubuntu 18.04 base install
 BASE_VM_NAME = Ubuntu_18_base
@@ -34,7 +36,7 @@ _VM_TEMPLATE = $(strip $(1))
 _VM_NAME = $(strip $(2))
 _VM_SOURCE = $(strip $(3))
 _VM_DIR = $(TMP_DIR)/$(_VM_NAME)
-_TRANSFORM_ARGS=
+_TRANSFORM_ARGS=$(if $(PAUSE),--add-breakpoint,)
 define packer_gen_build
 	$(if $(DELETE),rm -rf "$(_VM_DIR)/",)
 	cat "$(_VM_TEMPLATE)" | $(TRANSFORMER) $(_TRANSFORM_ARGS) | \
@@ -57,7 +59,6 @@ $(RL_SCRIPTS_VM_IMAGE): $(BASE_VM_IMAGE)
 		$(RL_SCRIPTS_VM_NAME), $(BASE_VM_IMAGE))
 
 # VM backing an already generated RL scripts image (saving time to edit it)
-rl_scripts_edit: _TRANSFORM_ARGS=--add-breakpoint
 rl_scripts_edit: | $(RL_SCRIPTS_VM_IMAGE)
 	$(call packer_gen_build, $(RL_SCRIPTS_PACKER_CONFIG), \
 		$(RL_SCRIPTS_VM_NAME)_tmp, $(RL_SCRIPTS_VM_IMAGE))
@@ -65,6 +66,7 @@ rl_scripts_edit: | $(RL_SCRIPTS_VM_IMAGE)
 RL_SCRIPTS_TMP_IMAGE = $(TMP_DIR)/$(RL_SCRIPTS_VM_NAME)_tmp/$(RL_SCRIPTS_VM_NAME)_tmp.qcow2
 rl_scripts_commit:
 	qemu-img commit "$(RL_SCRIPTS_TMP_IMAGE)"
+	rm -rf "$(TMP_DIR)/$(RL_SCRIPTS_VM_NAME)_tmp/"
 
 # ssh into a packer-opened VM (note: only rl_* support this)
 rl_ssh:

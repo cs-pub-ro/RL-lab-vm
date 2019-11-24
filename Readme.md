@@ -46,6 +46,12 @@ variable (but be careful):
 make DELETE=1 rl_scripts_edit
 ```
 
+If you want to keep the install scripts at the end of the provisioning phase,
+set the `DEBUG` variable:
+```sh
+make DEBUG=1 rl_scripts_edit
+```
+
 ## TODO
 
 Still TODO: image conversion and project generation for VMWare / VirtualBox
