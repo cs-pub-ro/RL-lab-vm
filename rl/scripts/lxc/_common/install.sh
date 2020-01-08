@@ -42,6 +42,6 @@ dpkg-reconfigure locales
 apt-get update && apt-get -y upgrade
 apt-get -y install rsync openssh-server curl wget bash-completion tree vim \
 	neovim nano ifupdown traceroute tcpdump rsync s-nail vsftpd telnetd \
-	net-tools mailutils sharutils dnsutils
+	net-tools sharutils dnsutils
 
 

@@ -17,7 +17,7 @@ localectl set-locale LANG=en_US.UTF-8
 
 export DEBIAN_FRONTEND=noninteractive
 # remove some useless packages like snapd
-apt-get purge snapd || true
+apt-get purge snapd docker.io || true
 apt-get -y autoremove
 
 apt-get update
