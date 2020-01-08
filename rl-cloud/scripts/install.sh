@@ -12,7 +12,7 @@ while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && \
 
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
-apt-get install -y cloud-init
+apt-get install -y cloud-init cloud-utils cloud-initramfs-growroot
 # copy the cloud-init config
 rsync -ai --chown="root:root" "$SRC/etc/" "/etc/"
 

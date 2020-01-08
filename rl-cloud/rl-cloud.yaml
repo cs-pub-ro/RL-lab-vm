@@ -6,7 +6,7 @@ variables:
   vm_name: "{{ env `VM_NAME` }}"
   arch: "amd64"
   base_image: "{{ env `SOURCE_IMAGE` }}"
-  disk_size: "5000"
+  disk_size: "8000"
   memory: "1024"
   cpus: "2"
   output_directory: "{{ env `OUTPUT_DIR` }}"
