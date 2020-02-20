@@ -40,3 +40,18 @@ function rl_wait_lxc_boot() {
 		'while [[ ! "$('"$cmd"')" =~ (running|degraded) ]]; do sleep 1; done'
 }
 
+# removes network / internet configuration
+function rl_clear_networking()
+{
+	for ct in red green blue; do
+		ip addr flush dev veth-"$ct"
+		ip li set dev veth-"$ct" down
+		lxc-attach -n "$ct" -- ip addr flush dev eth0
+		lxc-attach -n "$ct" -- ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+	done
+	iptables -t filter -F
+	iptables -t mangle -F
+	iptables -t nat -F
+	sysctl -q -w net.ipv4.ip_forward=0
+}
+

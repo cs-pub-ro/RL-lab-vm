@@ -10,6 +10,8 @@ echo "Waiting for container to boot..."
 while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && \
 	[ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do sleep 1; done
 
+source "$SRC/install_common.sh"
+
 echo "Setting up connectivity..."
 # setup IP connectivity
 ip addr add "10.90.$i.2/24" dev eth0
@@ -24,6 +26,7 @@ if id "ubuntu" >/dev/null 2>&1; then
 	echo "student:student" | chpasswd
 	echo "root:student" | chpasswd
 fi
+echo 'student ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/student
 
 # bashrc scripts
 _copy_bashrc() {
@@ -41,7 +44,21 @@ dpkg-reconfigure locales
 # upgrade and install packages
 apt-get update && apt-get -y upgrade
 apt-get -y install rsync openssh-server curl wget bash-completion tree vim \
-	neovim nano ifupdown traceroute tcpdump rsync s-nail vsftpd telnetd \
-	net-tools sharutils dnsutils
+	neovim nano ifupdown traceroute tcpdump rsync telnet s-nail vsftpd telnetd \
+	net-tools sharutils dnsutils ftp
 
+# common tweaks
+tweak_ubuntu
+
+# configure services
+systemctl enable vsftpd
+
+# run container-specific script
+[[ ! -f "/install_extra.sh" ]] || {
+	chmod +x /install_extra.sh
+	. /install_extra.sh
+}
+
+# Cleanup
+rm -f /install.sh /install_common.sh /install_extra.sh
 

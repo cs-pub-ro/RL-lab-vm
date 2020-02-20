@@ -11,10 +11,11 @@ echo "Waiting for the VM to fully boot..."
 while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && \
 	[ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do sleep 2; done
 
-"$SRC/packages.sh"
-"$SRC/tweaks.sh"
-"$SRC/lxc.sh"
-"$SRC/services.sh"
+source "$SRC/_common.sh"
+. "$SRC/packages.sh"
+. "$SRC/lxc.sh"
+. "$SRC/tweaks.sh"
+. "$SRC/services.sh"
 
 if [[ "$RL_DEBUG" != "1" ]]; then
 	# Cleanup the system

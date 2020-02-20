@@ -1,8 +1,9 @@
 #!/bin/bash
+# Tweaks for the host
 set -e
 
-# Root password
-echo 'root:student' | chpasswd
+# disable MOTD news, disable ssh DNS
+tweak_ubuntu
 
 # Copy configs
 rsync -ai --chown="root:root" "$SRC/files/etc/" /etc/

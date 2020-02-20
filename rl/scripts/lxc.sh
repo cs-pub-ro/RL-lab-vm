@@ -39,6 +39,7 @@ function lxc_container_prepare()
 	cp -f "$lxc_src/config" "$lxc_dir/config"
 	rsync -ai --exclude /config "$lxc_common/" "$lxc_src/" "$lxc_dir/rootfs/"
 	rsync -ai "$SRC/files/home/bashrc" "$lxc_dir/rootfs/home/.bashrc"
+	rsync -ai "$SRC/_common.sh" "$lxc_dir/rootfs/install_common.sh"
 	chmod 755 "$lxc_dir/rootfs/install.sh"
 	# disable systemd-networkd
 	ln -sf /dev/null "$lxc_dir/rootfs/etc/systemd/system/systemd-networkd.service"
@@ -54,6 +55,14 @@ function lxc_container_install()
 	lxc-attach -n "$1" -- /install.sh "$2"
 }
 
+# reset iptables
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+iptables -t nat -F
+iptables -t mangle -F
+iptables -F
+iptables -X
 # enable forwarding and NAT
 sysctl -w net.ipv4.ip_forward=1
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE

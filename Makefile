@@ -54,7 +54,7 @@ $(BASE_VM_IMAGE): | $(TMP_DIR)/
 
 # RL scripts VM
 rl_scripts: $(RL_SCRIPTS_VM_IMAGE)
-$(RL_SCRIPTS_VM_IMAGE): $(BASE_VM_IMAGE)
+$(RL_SCRIPTS_VM_IMAGE): | $(BASE_VM_IMAGE)
 	$(call packer_gen_build, $(RL_SCRIPTS_PACKER_CONFIG), \
 		$(RL_SCRIPTS_VM_NAME), $(BASE_VM_IMAGE))
 
