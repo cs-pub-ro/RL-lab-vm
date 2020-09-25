@@ -17,8 +17,8 @@ builders:
   - type: "qemu"
     vm_name: "{{ user `vm_name` }}.qcow2"
     iso_url: "{{ user `base_image` }}"
-    iso_checksum: ""
-    iso_checksum_type: none
+    iso_checksum: "none"
+    # iso_checksum_type: none
     disk_image: true
     output_directory: "{{ user `output_directory` }}"
 
