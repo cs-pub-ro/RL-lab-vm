@@ -16,16 +16,17 @@ PAUSE = $(DEBUG)
 BASE_VM_NAME = Ubuntu_18_base
 BASE_PACKER_CONFIG = base/ubuntu_18.yaml
 BASE_VM_IMAGE = $(TMP_DIR)/$(BASE_VM_NAME)/$(BASE_VM_NAME).qcow2
+BASE_VM_IMAGE_GUARD = $(TMP_DIR)/$(BASE_VM_NAME)/.generated
 
-# main RL scripts image (from BASE)
-RL_SCRIPTS_VM_NAME = RL_2019
-RL_SCRIPTS_PACKER_CONFIG = rl/rl.yaml
-RL_SCRIPTS_VM_IMAGE = $(TMP_DIR)/$(RL_SCRIPTS_VM_NAME)/$(RL_SCRIPTS_VM_NAME).qcow2
+# main lab VM image (from BASE)
+LABVM_NAME = RL_2020
+LABVM_PACKER_CONFIG = rl/rl.yaml
+LABVM_IMAGE = $(TMP_DIR)/$(LABVM_NAME)/$(LABVM_NAME).qcow2
 
-# cloud (EC2 / OpenStack) image (from on RL_SCRIPTS)
-RL_CLOUD_VM_NAME = RL_2019_cloud
-RL_CLOUD_PACKER_CONFIG = rl-cloud/rl-cloud.yaml
-RL_CLOUD_VM_IMAGE = $(TMP_DIR)/$(RL_CLOUD_NAME)/$(RL_CLOUD_NAME).qcow2
+# cloud-targeted image (from on LABVM)
+CLOUDVM_NAME = RL_2020_cloud
+CLOUDVM_PACKER_CONFIG = rl-cloud/rl-cloud.yaml
+CLOUDVM_IMAGE = $(TMP_DIR)/$(CLOUDVM_NAME)/$(CLOUDVM_NAME).qcow2
 
 # include local customizations file
 include local.mk
@@ -48,54 +49,51 @@ endef
 
 # Base image
 base: $(BASE_VM_IMAGE)
-$(BASE_VM_IMAGE): | $(TMP_DIR)/
+$(BASE_VM_IMAGE): $(BASE_VM_IMAGE_GUARD)
+$(BASE_VM_IMAGE_GUARD): | $(TMP_DIR)/.empty
 	$(call packer_gen_build, $(BASE_PACKER_CONFIG), \
 		$(BASE_VM_NAME), $(OS_INSTALL_ISO))
+	touch "$(BASE_VM_IMAGE_GUARD)"
 
 # RL scripts VM
-rl_scripts: $(RL_SCRIPTS_VM_IMAGE)
-$(RL_SCRIPTS_VM_IMAGE): | $(BASE_VM_IMAGE)
-	$(call packer_gen_build, $(RL_SCRIPTS_PACKER_CONFIG), \
-		$(RL_SCRIPTS_VM_NAME), $(BASE_VM_IMAGE))
+labvm: $(LABVM_IMAGE)
+$(LABVM_IMAGE): | $(BASE_VM_IMAGE)
+	$(call packer_gen_build, $(LABVM_PACKER_CONFIG), \
+		$(LABVM_NAME), $(BASE_VM_IMAGE))
 
 # VM backing an already generated RL scripts image (saving time to edit it)
-rl_scripts_edit: | $(RL_SCRIPTS_VM_IMAGE)
-	$(call packer_gen_build, $(RL_SCRIPTS_PACKER_CONFIG), \
-		$(RL_SCRIPTS_VM_NAME)_tmp, $(RL_SCRIPTS_VM_IMAGE))
+labvm_edit: | $(LABVM_IMAGE)
+	$(call packer_gen_build, $(LABVM_PACKER_CONFIG), \
+		$(LABVM_NAME)_tmp, $(LABVM_IMAGE))
 # commits the edited image back to the original
-RL_SCRIPTS_TMP_IMAGE = $(TMP_DIR)/$(RL_SCRIPTS_VM_NAME)_tmp/$(RL_SCRIPTS_VM_NAME)_tmp.qcow2
-rl_scripts_commit:
-	qemu-img commit "$(RL_SCRIPTS_TMP_IMAGE)"
-	rm -rf "$(TMP_DIR)/$(RL_SCRIPTS_VM_NAME)_tmp/"
+LABVM_TMP_IMAGE = $(TMP_DIR)/$(LABVM_NAME)_tmp/$(LABVM_NAME)_tmp.qcow2
+labvm_commit:
+	qemu-img commit "$(LABVM_TMP_IMAGE)"
+	rm -rf "$(TMP_DIR)/$(LABVM_NAME)_tmp/"
 
-# ssh into a packer-opened VM (note: only rl_* support this)
-rl_ssh:
+# ssh into a packer/qemu VM (note: only labvm-derived images support this)
+ssh:
 	$(SSH) $(SSH_ARGS) student@127.0.0.1 -p 20022
 
-.PHONY: base rl_scripts rl_scripts_edit rl_scripts_commit rl_ssh
+.PHONY: base labvm labvm_edit labvm_commit ssh
 
 # RL cloud image (EC2 / OpenStack)
-rl_cloud: $(RL_CLOUD_VM_IMAGE)
-$(RL_CLOUD_VM_IMAGE): $(RL_SCRIPTS_VM_IMAGE)
-	$(call packer_gen_build, $(RL_CLOUD_PACKER_CONFIG), \
-		$(RL_CLOUD_VM_NAME), $(RL_SCRIPTS_VM_IMAGE))
+cloudvm: $(CLOUDVM_IMAGE)
+$(CLOUDVM_IMAGE): $(LABVM_IMAGE)
+	$(call packer_gen_build, $(CLOUDVM_PACKER_CONFIG), \
+		$(CLOUDVM_NAME), $(LABVM_IMAGE))
 
-rl_cloud_test: _TRANSFORM_ARGS=--add-breakpoint
-rl_cloud_test: $(RL_CLOUD_VM_IMAGE)
-	$(call packer_gen_build, $(RL_CLOUD_PACKER_CONFIG), \
-		$(RL_CLOUD_VM_NAME)_test, $(RL_SCRIPTS_VM_IMAGE))
-
-.PHONY: rl_cloud rl_cloud_test
+.PHONY: cloudvm
 
 validate:
 	cat "$(BASE_PACKER_CONFIG)" | $(TRANSFORMER) | $(PACKER) validate -
-	cat "$(RL_SCRIPTS_PACKER_CONFIG)" | $(TRANSFORMER) | $(PACKER) validate -
-	cat "$(RL_CLOUD_PACKER_CONFIG)" | $(TRANSFORMER) | $(PACKER) validate -
+	cat "$(LABVM_PACKER_CONFIG)" | $(TRANSFORMER) | $(PACKER) validate -
+	cat "$(CLOUDVM_PACKER_CONFIG)" | $(TRANSFORMER) | $(PACKER) validate -
 .PHONY: validate
 
-$(TMP_DIR)/:
-	mkdir -p $(TMP_DIR)/
+$(TMP_DIR)/.empty:
+	mkdir -p "$(TMP_DIR)/"
+	touch "$(TMP_DIR)/.empty"
 
 print-%  : ; @echo $* = $($*)
-
 
