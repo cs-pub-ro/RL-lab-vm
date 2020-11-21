@@ -13,9 +13,9 @@ while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && \
 
 source "$SRC/_common.sh"
 . "$SRC/packages.sh"
-. "$SRC/lxc.sh"
 . "$SRC/tweaks.sh"
-. "$SRC/services.sh"
+# . "$SRC/services.sh"
+. "$SRC/ansible.sh"
 
 if [[ "$RL_DEBUG" != "1" ]]; then
 	# Cleanup the system

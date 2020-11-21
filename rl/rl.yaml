@@ -47,10 +47,13 @@ builders:
 provisioners:
   - type: "shell"
     inline:
-      - "mkdir -p /home/student/install/"
+      - "mkdir -p /home/student/install /home/student/install/thirdparty"
   - type: "file"
     source: "rl/scripts/"
     destination: "/home/student/install/"
+  - type: "file"
+    source: "thirdparty/"
+    destination: "/home/student/install/thirdparty"
   - type: "shell"
     inline:
       - "chmod +x /home/student/install/install-base.sh"

@@ -26,7 +26,7 @@ apt-get install -y docker-ce docker-compose
 # docker without sudo
 usermod -aG docker student || true
 
-# disable docker by default
-systemctl stop docker
-systemctl disable docker
+# enable docker
+systemctl enable docker
+systemctl restart docker
 
