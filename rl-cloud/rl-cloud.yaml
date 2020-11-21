@@ -26,7 +26,7 @@ builders:
     use_backing_file: true
     format: "qcow2"
     net_device: "virtio-net"
-    disk_interface: "ide"
+    disk_interface: "virtio"
     disk_size: "{{ user `disk_size` }}"
     # disk usage optimizations (unmap zeroes as free space)
     disk_discard: unmap

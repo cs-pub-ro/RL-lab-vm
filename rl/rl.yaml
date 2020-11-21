@@ -27,14 +27,14 @@ builders:
     use_backing_file: true
     format: "qcow2"
     net_device: "virtio-net"
-    disk_interface: "ide"
+    disk_interface: "virtio"
     disk_size: "{{ user `disk_size` }}"
     # disk usage optimizations (unmap zeroes as free space)
     disk_discard: unmap
     disk_detect_zeroes: unmap
     skip_compaction: true  # not required anymore
-    ssh_host_port_min: 20022
-    ssh_host_port_max: 20022
+    host_port_min: 20022
+    host_port_max: 20022
 
     # Communicator vars
     communicator: ssh
