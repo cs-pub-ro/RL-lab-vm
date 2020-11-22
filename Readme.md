@@ -10,6 +10,12 @@ Requirements:
 
 ## Preparation
 
+First, update submodules:
+```sh
+git submodule init
+git submodule update
+```
+
 Download and save a [Ubuntu 18.04 Server alternative
 install](http://cdimage.ubuntu.com/releases/18.04.5/release/) .iso image.
 WARNING: **DO NOT** use the `live-server` ISO (it doesn't work for unattended
