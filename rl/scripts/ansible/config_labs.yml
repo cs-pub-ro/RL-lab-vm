@@ -2,7 +2,7 @@
   name: Configure Docker Engine
   hosts: rl_base_node
   vars:
-    lab_git_url: "https://github.com/cs-pub-ro/RL-kubernetes-config.git"
+    lab_git_url: "https://github.com/cs-pub-ro/RL-linux-labs.git"
     lab_path: "{{ lookup('env', 'LABS_DEST') | default('/opt/rl-labs', True) }}"
   tasks:
     - name: Disable network abstractization and enable IPv6
