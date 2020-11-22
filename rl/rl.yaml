@@ -47,6 +47,7 @@ builders:
 provisioners:
   - type: "shell"
     inline:
+      - "sudo rm -rf /home/student/install"
       - "mkdir -p /home/student/install /home/student/install/thirdparty"
   - type: "file"
     source: "rl/scripts/"

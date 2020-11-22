@@ -1,0 +1,3 @@
+[submodule "thirdparty/labs"]
+	path = thirdparty/labs
+	url = https://github.com/cs-pub-ro/RL-linux-labs.git

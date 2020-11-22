@@ -15,7 +15,9 @@ source "$SRC/_common.sh"
 . "$SRC/packages.sh"
 . "$SRC/tweaks.sh"
 # . "$SRC/services.sh"
-. "$SRC/ansible.sh"
+
+# use ansible for the rest of the provisioning process
+. "$SRC/ansible/provision.sh"
 
 if [[ "$RL_DEBUG" != "1" ]]; then
 	# Cleanup the system

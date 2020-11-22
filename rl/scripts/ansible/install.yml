@@ -1,0 +1,40 @@
+-
+  # ansible-playbook -i inventory -c local install.yml
+  name: Prepare lab
+  hosts: rl_base_node
+  vars:
+    # installation flags
+    install:
+      - name: "onos"
+        required: true
+      - name: "ryu"
+        required: true 
+    packages:
+    - git
+    - resolvconf
+
+  tasks:
+  - name: Install required packages
+    package:
+      name: "{{ item }}"
+      state: present 
+    loop: "{{ packages }}"
+  
+  - name: Configure "{{ item.name }}" installation trigger by adding custom facts
+    set_fact: {"{{ item.name }}" : "{{item.required}}"}
+    loop: "{{ install }}"
+
+- name: Install ContainerNET
+  import_playbook: install_containernet.yml  
+  
+- name: Install Onos
+  import_playbook: install_onos.yml
+  when: onos
+
+- name: Install Ryu
+  import_playbook: install_ryu.yml
+  when: ryu
+
+- name: Configure RL Labs
+  import_playbook: config_labs.yml
+

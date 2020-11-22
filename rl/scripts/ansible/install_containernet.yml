@@ -1,0 +1,43 @@
+- 
+  name: Install Containernet
+  hosts: rl_base_node
+  vars:
+    git_repository: "https://github.com/containernet/containernet.git"
+    packages:
+    - git
+    - ansible
+    - aptitude
+
+  tasks:
+    - package:
+        name: "{{ item }}"
+        state: present 
+      loop: "{{ packages }}"
+    
+    - name: Clone Containernet Public repository
+      git:
+        repo: "{{ git_repository }}"
+        dest: "/opt/containernet"
+
+    - name: Check whether ContainerNet is installed
+      shell: test -d /opt/containernet/
+      register: containernet_installed
+
+    - name: Execute ContainerNet ansible installer
+      command: 
+        cmd: ansible-playbook -i "localhost" -c local install.yml
+        chdir: /opt/containernet/ansible/
+      register: out
+      when: containernet_installed.rc != 0
+
+    - debug: var=out.stdout_lines
+    
+    #- name: Delete playbook preamble in order to be imported
+    #  shell: sed -n '/tasks/,$p' /tmp/containernet/ansible/install.yml | tail -n +2 > /tmp/containernet/ansible/install.yaml
+
+    #- name: Install playbook
+    #  include_tasks: /tmp/containernet/ansible/install.yaml
+    #  args: 
+    #      chdir: /tmp/containernet/ansible/
+    #      static: no
+

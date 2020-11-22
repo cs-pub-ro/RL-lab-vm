@@ -16,8 +16,8 @@ apt-get install -y tree tmux vim nano neovim traceroute tcpdump dsniff rsync \
 	s-nail mailutils sharutils bash-completion telnet dnsutils ftp \
 	iptables-persistent
 
-# lxc, container tools
-apt-get install -y lxc bridge-utils
+# tools
+apt-get install -y bridge-utils
 # official docker
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"

@@ -1,0 +1,58 @@
+- 
+  name: Configure Docker Engine
+  hosts: rl_base_node
+  vars:
+    lab_git_url: "https://github.com/cs-pub-ro/RL-kubernetes-config.git"
+    lab_path: "{{ lookup('env', 'LABS_DEST') | default('/opt/rl-labs', True) }}"
+  tasks:
+    - name: Disable network abstractization and enable IPv6
+      copy:
+        dest: "/etc/docker/daemon.json"
+        content: |
+          {
+            "iptables":false,
+            "bridge":"none",
+            "ip-forward":false,
+            "ipv6":true
+          }
+
+    - name: Restart docker service
+      service: 
+        name: docker
+        state: restarted
+ 
+    - name: Add 'update' git remote to rl-labs
+      shell: git remote add update "{{ lab_git_url }}"; git remote remove origin
+      args:
+        chdir: "{{ lab_path }}"
+
+    - name: Run the rl-labs build script
+      command: "{{ lab_path }}/build.sh" 
+
+    - name: Load custom rl-labs functions (root)
+      lineinfile:
+          path: /root/.bashrc
+          line: ". {{ lab_path }}/utils/functions.sh"
+          create: yes
+
+    - name: Load custom rl-labs functions (student)
+      lineinfile:
+          path: /home/student/.bashrc
+          line: ". {{ lab_path }}/utils/functions.sh"
+          create: yes
+
+    # manual: ansible-galaxy collection install community.general.docker_image
+    # - name: Build RL Lab Docker Image
+    #   community.general.docker_image:
+    #     name: rlbase:latest
+    #     build:
+    #       path: "{{lab_path}}"
+    #       dockerfile: Dockerfile.base
+    #       network: host
+    #       pull: yes
+    #     source: build
+
+    # We don't do that here
+    #- name: Reboot the machine (scheduled in 1 minute)
+    #  shell: shutdown -r +1
+    #  reboot: 
