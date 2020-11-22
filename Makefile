@@ -61,6 +61,9 @@ $(LABVM_IMAGE): | $(BASE_VM_IMAGE)
 	$(call packer_gen_build, $(LABVM_PACKER_CONFIG), \
 		$(LABVM_NAME), $(BASE_VM_IMAGE))
 
+labvm_clean:
+	rm -rf "$(TMP_DIR)/$(LABVM_NAME)/"
+
 # VM backing an already generated RL scripts image (saving time to edit it)
 labvm_edit: | $(LABVM_IMAGE)
 	$(call packer_gen_build, $(LABVM_PACKER_CONFIG), \
@@ -82,6 +85,7 @@ cloudvm: $(CLOUDVM_IMAGE)
 $(CLOUDVM_IMAGE): $(LABVM_IMAGE)
 	$(call packer_gen_build, $(CLOUDVM_PACKER_CONFIG), \
 		$(CLOUDVM_NAME), $(LABVM_IMAGE))
+	qemu-img convert -O qcow2 "$(LABVM_IMAGE)" "$(TMP_DIR)/$(CLOUDVM_NAME)/$(CLOUDVM_NAME)_big.qcow2"
 
 .PHONY: cloudvm
 
