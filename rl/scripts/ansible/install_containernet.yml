@@ -20,7 +20,7 @@
         dest: "/opt/containernet"
 
     - name: Check whether ContainerNet is installed
-      shell: test -d /opt/containernet/
+      shell: "test -f /usr/local/bin/mn && echo ok || true"
       register: containernet_installed
 
     - name: Execute ContainerNet ansible installer
@@ -28,7 +28,7 @@
         cmd: ansible-playbook -i "localhost" -c local install.yml
         chdir: /opt/containernet/ansible/
       register: out
-      when: containernet_installed.rc != 0
+      when: containernet_installed.stdout.find('ok') == -1
 
     - debug: var=out.stdout_lines
     
