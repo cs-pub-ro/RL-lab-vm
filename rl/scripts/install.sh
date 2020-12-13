@@ -17,8 +17,8 @@ fi
 
 source "$SRC/_common.sh"
 . "$SRC/packages.sh"
+. "$SRC/services.sh"
 . "$SRC/tweaks.sh"
-# . "$SRC/services.sh"
 
 # use ansible for the rest of the provisioning process
 . "$SRC/ansible/provision.sh"
