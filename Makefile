@@ -5,12 +5,14 @@ TMP_DIR = /tmp/packer
 OS_INSTALL_ISO = REQUIRED
 
 PACKER = packer
-PACKER_ARGS = -on-error=abort -var "rl_debug=$(DEBUG)"
+PACKER_ARGS = -on-error=abort -var "rl_debug=$(DEBUG)" \
+			  -var "rl_noinstall=$(NOINSTALL)"
 TRANSFORMER = ./build-scripts/packer_transform.py
 SSH = ssh
 SSH_ARGS = 
 DEBUG =  # set to 1 to keep the files at the end of the operation
 PAUSE = $(DEBUG)
+NOINSTALL =   # set to 1 to skip distro install scripts
 
 # Fresh Ubuntu 18.04 base install
 BASE_VM_NAME = Ubuntu_18_base

@@ -11,6 +11,10 @@ echo "Waiting for the VM to fully boot..."
 while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && \
 	[ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do sleep 2; done
 
+if [[ "$RL_NOINSTALL" == "1" ]]; then
+	exit 0
+fi
+
 source "$SRC/_common.sh"
 . "$SRC/packages.sh"
 . "$SRC/tweaks.sh"

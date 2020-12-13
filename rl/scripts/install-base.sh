@@ -11,6 +11,10 @@ echo "Waiting for the VM to fully boot..."
 while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && \
 	[ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do sleep 2; done
 
+if [[ "$RL_NOINSTALL" == "1" ]]; then
+	exit 0
+fi
+
 # generate locales
 locale-gen "en_US.UTF-8"
 localectl set-locale LANG=en_US.UTF-8
@@ -18,14 +22,11 @@ localectl set-locale LANG=en_US.UTF-8
 export DEBIAN_FRONTEND=noninteractive
 # remove some useless packages like snapd and stock docker
 apt-get purge snapd docker.io || true
-apt-get -y autoremove
 
 apt-get update
 apt-get -y upgrade
 # virtualization drivers & base networking
 apt-get install -y open-vm-tools iproute2 ifupdown
-apt-get -y autoremove
-apt-get -y clean
 
 # Disable UFW
 systemctl disable ufw

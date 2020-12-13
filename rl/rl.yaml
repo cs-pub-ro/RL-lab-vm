@@ -13,6 +13,7 @@ variables:
   ssh_username: "student"
   ssh_password: "student"
   rl_debug:
+  rl_noinstall:
 
 builders:
   - type: "qemu"
@@ -61,6 +62,9 @@ provisioners:
       - "/home/student/install/install-base.sh"
     execute_command: "{{.Vars}} sudo -E -S sh -e '{{.Path}}'"
     expect_disconnect: true
+    environment_vars:
+     - "RL_DEBUG={{user `rl_debug`}}"
+     - "RL_NOINSTALL={{user `rl_noinstall`}}"
   - type: "shell"
     inline:
       - "chmod +x /home/student/install/install.sh"
@@ -68,4 +72,5 @@ provisioners:
     execute_command: "{{.Vars}} sudo -E -S sh -e '{{.Path}}'"
     environment_vars:
      - "RL_DEBUG={{user `rl_debug`}}"
+     - "RL_NOINSTALL={{user `rl_noinstall`}}"
 
