@@ -29,18 +29,6 @@
     - name: Run the rl-labs build script
       command: "{{ lab_path }}/build.sh" 
 
-    - name: Load custom rl-labs functions (root)
-      lineinfile:
-          path: /root/.bashrc
-          line: ". {{ lab_path }}/utils/functions.sh"
-          create: yes
-
-    - name: Load custom rl-labs functions (student)
-      lineinfile:
-          path: /home/student/.bashrc
-          line: ". {{ lab_path }}/utils/functions.sh"
-          create: yes
-
     # manual: ansible-galaxy collection install community.general.docker_image
     # - name: Build RL Lab Docker Image
     #   community.general.docker_image:
