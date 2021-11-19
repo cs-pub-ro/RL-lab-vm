@@ -26,6 +26,8 @@ builders:
 
     # VM Configuration
     use_backing_file: true
+    qemu_img_args:
+      create: ["-F", "qcow2"]
     format: "qcow2"
     net_device: "virtio-net"
     disk_interface: "virtio"
