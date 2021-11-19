@@ -17,7 +17,7 @@ git submodule update
 ```
 
 Download and save a [Ubuntu 18.04 Server alternative
-install](http://cdimage.ubuntu.com/releases/18.04.5/release/) .iso image.
+install](http://cdimage.ubuntu.com/releases/18.04.6/release/) .iso image.
 WARNING: **DO NOT** use the `live-server` ISO (it doesn't work for unattended
 install purposes)!
 
