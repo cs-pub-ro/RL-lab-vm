@@ -56,6 +56,8 @@ $(BASE_VM_IMAGE_GUARD): | $(TMP_DIR)/.empty
 	$(call packer_gen_build, $(BASE_PACKER_CONFIG), \
 		$(BASE_VM_NAME), $(OS_INSTALL_ISO))
 	touch "$(BASE_VM_IMAGE_GUARD)"
+base_clean:
+	rm -rf "$(TMP_DIR)/$(BASE_VM_NAME)/"
 
 # RL scripts VM
 labvm: $(LABVM_IMAGE)
@@ -67,6 +69,7 @@ labvm_clean:
 	rm -rf "$(TMP_DIR)/$(LABVM_NAME)/"
 
 # VM backing an already generated RL scripts image (saving time to edit it)
+labvm_edit: PAUSE=1
 labvm_edit: | $(LABVM_IMAGE)
 	$(call packer_gen_build, $(LABVM_PACKER_CONFIG), \
 		$(LABVM_NAME)_tmp, $(LABVM_IMAGE))

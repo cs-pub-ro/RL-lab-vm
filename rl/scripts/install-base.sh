@@ -20,16 +20,13 @@ locale-gen "en_US.UTF-8"
 localectl set-locale LANG=en_US.UTF-8
 
 export DEBIAN_FRONTEND=noninteractive
-# remove some useless packages like snapd and stock docker
-apt-get purge snapd docker.io || true
-
 apt-get update
 apt-get -y upgrade
+# remove older kernels
+apt-get -y --purge autoremove
 # virtualization drivers & base networking
-apt-get install -y open-vm-tools iproute2 ifupdown
+apt-get install --no-install-recommends -y open-vm-tools iproute2 ifupdown
 
-# Disable UFW
-systemctl disable ufw
 # Change hostname to host
 hostnamectl set-hostname host
 sed -i "s/^127.0.1.1\s.*/127.0.1.1       host/g"  /etc/hosts

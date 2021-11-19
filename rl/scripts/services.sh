@@ -5,16 +5,16 @@ echo "Installing & configuring services..." >&2
 export DEBIAN_FRONTEND=noninteractive
 
 # network services: telnetd, vsftpd
-apt-get install -y telnetd vsftpd
+apt-get install --no-install-recommends -y telnetd vsftpd
 # configs?
 
 # apache2
-apt-get install -y apache2
+apt-get install --no-install-recommends -y apache2
 
 # postfix, courier
 echo "postfix	postfix/mailname string host" | debconf-set-selections
 echo "postfix	postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections
-apt-get install -y postfix courier-imap courier-ssl courier-imap-ssl
+apt-get install --no-install-recommends -y postfix courier-imap courier-ssl courier-imap-ssl
 # configure mail
 postconf -e 'home_mailbox= Maildir/'
 # use maildir for reading mail
@@ -27,5 +27,5 @@ if ! grep "^export MAIL=" /etc/bash.bashrc; then
 fi
 
 # DHCP servers
-apt-get install -y isc-dhcp-server dnsmasq
+apt-get install --no-install-recommends -y isc-dhcp-server dnsmasq
 

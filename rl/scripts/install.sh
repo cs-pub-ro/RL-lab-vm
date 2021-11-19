@@ -25,6 +25,9 @@ source "$SRC/_common.sh"
 
 if [[ "$RL_DEBUG" != "1" ]]; then
 	# Cleanup the system
+	apt-get -y purge libgl1-mesa-dri
+	apt-get -y --purge autoremove
+	apt-get -y autoclean
 	rm -rf /home/student/install*
 	rm -f /home/student/.bash_history
 	rm -f /root/.bash_history

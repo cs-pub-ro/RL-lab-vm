@@ -1,6 +1,11 @@
 #!/bin/sh
 # Base provisioning script
 
+export DEBIAN_FRONTEND=noninteractive
+
+# remove some useless packages like snapd and ubuntu scripts
+apt-get -y purge snapd ufw apport ubuntu-advantage-tools
+
 apt-get install -y wget curl
 
 sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers

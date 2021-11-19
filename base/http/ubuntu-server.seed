@@ -259,7 +259,7 @@ d-i partman/confirm_nooverwrite boolean true
 
 # The kernel image (meta) package to be installed; "none" can be used if no
 # kernel is to be installed.
-#d-i base-installer/kernel/image string linux-generic
+d-i base-installer/kernel/image string linux-virtual
 
 ### Account setup
 # Skip creation of a root account (normal user account will be able to
@@ -335,7 +335,7 @@ d-i user-setup/encrypt-home boolean false
 tasksel tasksel/first multiselect Basic Ubuntu server
 
 # Individual additional packages to install
-d-i pkgsel/include string openssh-server build-essential
+d-i pkgsel/include string openssh-server
 # Whether to upgrade packages after debootstrap.
 # Allowed values: none, safe-upgrade, full-upgrade
 d-i pkgsel/upgrade select none
