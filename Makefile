@@ -79,6 +79,15 @@ labvm_commit:
 	qemu-img commit "$(LABVM_TMP_IMAGE)"
 	rm -rf "$(TMP_DIR)/$(LABVM_NAME)_tmp/"
 
+QEMU_NBD_DEV=nbd0
+labvm_zerofree:
+	sudo qemu-nbd -c "/dev/$(QEMU_NBD_DEV)" "$(LABVM_IMAGE)"
+	sudo zerofree "/dev/$(QEMU_NBD_DEV)p1"
+	sudo qemu-nbd -d "/dev/$(QEMU_NBD_DEV)"
+
+labvmdk:
+	qemu-img convert -O vmdk "$(LABVM_IMAGE)" "$(TMP_DIR)/$(LABVM_NAME)/$(LABVM_NAME).vmdk"
+
 # ssh into a packer/qemu VM (note: only labvm-derived images support this)
 ssh:
 	$(SSH) $(SSH_ARGS) student@127.0.0.1 -p 20022
