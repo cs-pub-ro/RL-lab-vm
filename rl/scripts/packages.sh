@@ -13,7 +13,7 @@ apt-get install --no-install-recommends -y apt-transport-https ca-certificates \
 # terminal / networking / utilities
 apt-get install --no-install-recommends -y tree tmux vim nano neovim traceroute \
 	tcpdump dsniff rsync s-nail mailutils sharutils bash-completion telnet \
-	dnsutils ftp iptables-persistent
+	dnsutils ftp iptables-persistent nmap whois elinks
 
 # tools
 apt-get install --no-install-recommends -y bridge-utils

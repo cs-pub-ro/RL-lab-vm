@@ -45,7 +45,7 @@ dpkg-reconfigure locales
 apt-get update && apt-get -y upgrade
 apt-get -y install rsync openssh-server curl wget bash-completion tree vim \
 	neovim nano ifupdown traceroute tcpdump rsync telnet s-nail vsftpd telnetd \
-	net-tools sharutils dnsutils ftp
+	net-tools sharutils dnsutils ftp nmap whois elinks
 
 # common tweaks
 tweak_ubuntu
