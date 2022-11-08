@@ -34,3 +34,7 @@ EOF
 systemctl enable docker
 systemctl restart docker
 
+# fix .docker permissions
+sudo mkdir -p /home/student/.docker
+chown student:student /home/student/.docker -R
+
