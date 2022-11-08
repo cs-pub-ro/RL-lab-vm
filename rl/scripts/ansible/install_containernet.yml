@@ -51,11 +51,12 @@
 
     - block:
         - name: build and install Containernet (using Mininet installer)
-          shell: PYTHON=python3 XTABLES_LIBDIR=/usr/lib/x86_64-linux-gnu/xtables/ util/install.sh -fnv
+          shell: |
+              [ -d "/opt/openflow" ] || PYTHON=python3 XTABLES_LIBDIR=/usr/lib/x86_64-linux-gnu/xtables/ util/install.sh -fnv
           args:
             chdir: /opt/containernet
           register: ps
-          no_log: true
+          no_log: false
       rescue:
         - name: show error
           debug:
