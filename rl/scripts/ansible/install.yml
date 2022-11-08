@@ -26,7 +26,7 @@
 
 - name: Install ContainerNET
   import_playbook: install_containernet.yml  
-  
+
 - name: Install Onos
   import_playbook: install_onos.yml
   when: onos

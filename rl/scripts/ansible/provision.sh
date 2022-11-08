@@ -12,6 +12,7 @@ sudo apt-get install -y ansible
 
 # install community modules
 ansible-galaxy collection install community.general
+ansible-galaxy install kwoodson.yedit
 
 # copy the lab scripts
 LABS_SRC="$SRC/thirdparty/labs"

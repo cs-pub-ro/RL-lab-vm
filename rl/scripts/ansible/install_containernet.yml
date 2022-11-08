@@ -2,11 +2,14 @@
   name: Install Containernet
   hosts: rl_base_node
   vars:
-    git_repository: "https://github.com/containernet/containernet.git"
-    packages:
-    - git
-    - ansible
-    - aptitude
+    git_repository: "https://github.com/rl-cs-pub-ro/containernet.git"
+    git_branch: "rl2022"
+    packages: [
+        'git', 'aptitude', 'apt-transport-https', 'ca-certificates',
+        'curl', 'python3-setuptools', 'python3-dev', 'build-essential',
+        'python3-pip', 'iptables', 'software-properties-common'
+      ]
+    containernet_dest: "/opt/containernet"
 
   tasks:
     - package:
@@ -17,27 +20,58 @@
     - name: Clone Containernet Public repository
       git:
         repo: "{{ git_repository }}"
-        dest: "/opt/containernet"
+        version: "{{ git_branch }}"
+        dest: "{{ containernet_dest }}"
 
-    - name: Check whether ContainerNet is installed
-      shell: "test -f /usr/local/bin/mn && echo ok || true"
-      register: containernet_installed
+    - name: find pip executable
+      shell: "which pip3"
+      register: pip_path     
+  
+    - name: install python-backports.ssl-match-hostname
+      pip: name=backports.ssl-match-hostname executable={{pip_path.stdout}}
+  
+    - name: install pytest
+      pip: name=pytest executable={{pip_path.stdout}}
+  
+    - name: install docker py
+      pip: name=docker executable={{pip_path.stdout}}
+  
+    - name: install python-iptables
+      pip: name=python-iptables state=latest executable={{pip_path.stdout}}
+  
+    - name: install pexpect
+      pip: name=pexpect executable={{pip_path.stdout}}
+  
+    - name: python-iptables workaround
+      ansible.builtin.lineinfile:
+        path: /etc/environment
+        regexp: '^XTABLES_LIBDIR '
+        insertafter: EOF
+        line: XTABLES_LIBDIR=/usr/lib/x86_64-linux-gnu/xtables/
 
-    - name: Execute ContainerNet ansible installer
-      command: 
-        cmd: ansible-playbook -i "localhost" -c local install.yml
-        chdir: /opt/containernet/ansible/
-      register: out
-      when: containernet_installed.stdout.find('ok') == -1
+    - block:
+        - name: build and install Containernet (using Mininet installer)
+          shell: PYTHON=python3 XTABLES_LIBDIR=/usr/lib/x86_64-linux-gnu/xtables/ util/install.sh -fnv
+          args:
+            chdir: /opt/containernet
+          register: ps
+          no_log: true
+      rescue:
+        - name: show error
+          debug:
+            msg: "{{ ps.stdout }} {{ ps.stderr }}"
+        - name: fail the playbook
+          fail:
+            msg: Error on command. See debug of stderr above
 
-    - debug: var=out.stdout_lines
-    
-    #- name: Delete playbook preamble in order to be imported
-    #  shell: sed -n '/tasks/,$p' /tmp/containernet/ansible/install.yml | tail -n +2 > /tmp/containernet/ansible/install.yaml
-
-    #- name: Install playbook
-    #  include_tasks: /tmp/containernet/ansible/install.yaml
-    #  args: 
-    #      chdir: /tmp/containernet/ansible/
-    #      static: no
-
+    - name: install Containernet Python egg etc.
+      shell: make -f Makefile develop
+      args:
+        chdir: "{{ containernet_dest }}"
+  
+    - name: download 'ubuntu' docker image for Containernet example
+      shell: docker pull ubuntu:trusty
+      tags:
+         - notindocker
+         - nopull
+  
