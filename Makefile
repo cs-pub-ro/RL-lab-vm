@@ -81,7 +81,7 @@ labvm_commit:
 QEMU_NBD_DEV=nbd0
 labvm_zerofree:
 	sudo qemu-nbd -c "/dev/$(QEMU_NBD_DEV)" "$(LAB_VM_OUT_IMAGE)"
-	sudo zerofree "/dev/$(QEMU_NBD_DEV)p1"
+	sudo zerofree "/dev/$(QEMU_NBD_DEV)p2"
 	sudo qemu-nbd -d "/dev/$(QEMU_NBD_DEV)"
 
 labvmdk:

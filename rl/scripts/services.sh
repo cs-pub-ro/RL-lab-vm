@@ -34,4 +34,6 @@ fi
 echo "disable dnsmasq.service" > "$SYSTEMD_PRESET_FILE"
 echo "disable isc-dhcp-server.service" > "$SYSTEMD_PRESET_FILE"
 apt-get install --no-install-recommends -y isc-dhcp-server dnsmasq
+systemctl disable dnsmasq
+systemctl disable isc-dhcp-server
 
