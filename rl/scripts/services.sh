@@ -12,9 +12,9 @@ apt-get install --no-install-recommends -y telnetd vsftpd
 apt-get install --no-install-recommends -y apache2
 
 # postfix, courier
-echo "postfix	postfix/mailname string host" | debconf-set-selections
-echo "postfix	postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections
-apt-get install --no-install-recommends -y postfix courier-imap courier-ssl courier-imap-ssl
+echo "postfix postfix/mailname string host" | debconf-set-selections
+echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections
+apt-get install --no-install-recommends -y postfix courier-imap
 # configure mail
 postconf -e 'home_mailbox= Maildir/'
 # use maildir for reading mail
