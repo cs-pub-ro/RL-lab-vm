@@ -24,8 +24,13 @@ apt-get update
 apt-get install -y docker-ce docker-compose
 # docker without sudo
 usermod -aG docker student || true
-
-# enable docker
+# customize docker daemon.json
+cat << EOF > /etc/docker/daemon.json
+{
+  "features": {"buildkit": true}
+}
+EOF
+# enable + [re]start docker
 systemctl enable docker
 systemctl restart docker
 

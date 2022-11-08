@@ -76,8 +76,8 @@ build {
 
   provisioner "shell" {
     inline = [
-      "chmod +x /home/student/install/install-base.sh",
-      "/home/student/install/install-base.sh"
+      "chmod +x /home/student/install/install-pre.sh",
+      "/home/student/install/install-pre.sh"
     ]
     expect_disconnect = true
     execute_command = "{{.Vars}} sudo -E -S bash -ex '{{.Path}}'"

@@ -23,11 +23,11 @@ source "$SRC/_common.sh"
 # use ansible for the rest of the provisioning process
 . "$SRC/ansible/provision.sh"
 
-if [[ "$RL_DEBUG" != "1" ]]; then
-	# Cleanup the system
-	apt-get -y purge libgl1-mesa-dri
-	apt-get -y --purge autoremove
-	apt-get -y autoclean
+# Cleanup the system
+apt-get -y purge libgl1-mesa-dri
+apt-get -y --purge autoremove
+apt-get -y autoclean
+if [[ "$VM_DEBUG" != "1" ]]; then
 	rm -rf /home/student/install*
 	rm -f /home/student/.bash_history
 	rm -f /root/.bash_history

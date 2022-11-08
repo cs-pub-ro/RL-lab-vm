@@ -4,9 +4,13 @@ set -e
 echo "Installing & configuring services..." >&2
 export DEBIAN_FRONTEND=noninteractive
 
+# Use Systemd presets to disable services by default
+SYSTEMD_PRESET_FILE=/etc/systemd/system-preset/90-default-servers.preset
+mkdir -p /etc/systemd/system-preset/
+
 # network services: telnetd, vsftpd
 apt-get install --no-install-recommends -y telnetd vsftpd
-# configs?
+# TODO: configs?
 
 # apache2
 apt-get install --no-install-recommends -y apache2
@@ -27,5 +31,7 @@ if ! grep "^export MAIL=" /etc/bash.bashrc; then
 fi
 
 # DHCP servers
+echo "disable dnsmasq.service" > "$SYSTEMD_PRESET_FILE"
+echo "disable isc-dhcp-server.service" > "$SYSTEMD_PRESET_FILE"
 apt-get install --no-install-recommends -y isc-dhcp-server dnsmasq
 

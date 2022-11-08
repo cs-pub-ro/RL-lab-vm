@@ -28,17 +28,26 @@ apt-get -y --purge autoremove
 apt-get install --no-install-recommends -y open-vm-tools iproute2 ifupdown
 
 # Change hostname to host
-hostnamectl set-hostname host
-sed -i "s/^127.0.1.1\s.*/127.0.1.1       host/g"  /etc/hosts
+if [[ "$(hostname)" != "host" ]]; then
+	hostnamectl set-hostname host
+	sed -i "s/^127.0.1.1\s.*/127.0.1.1       host/g"  /etc/hosts
+fi
+
+# setup an empty network interfaces
+mkdir -p /etc/network/
+rsync -ai --chown="root:root" --chmod="755" "$SRC/files/etc/network/interfaces" /etc/network/interfaces
+
+if grep -q " biosdevname=0 " /proc/cmdline; then
+	exit 0
+fi
+
+echo "blacklist floppy" > /etc/modprobe.d/blacklist-floppy.conf
+dpkg-reconfigure initramfs-tools
 
 # Use old interface names (ethX) + disable qxl modeset (spice is buggy)
 GRUB_CMDLINE_LINUX="quiet net.ifnames=0 biosdevname=0 nomodeset"
 sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"$GRUB_CMDLINE_LINUX\"/g" /etc/default/grub
 update-grub
-
-# setup an empty network interfaces
-mkdir -p /etc/network/
-rsync -ai --chown="root:root" --chmod="755" "$SRC/files/etc/network/interfaces" /etc/network/interfaces
 
 # reboot
 systemctl stop sshd.service
