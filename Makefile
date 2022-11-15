@@ -13,7 +13,7 @@ SSH = ssh
 SSH_ARGS = 
 
 # Fresh Ubuntu Server XX.04 base install
-BASE_VM_NAME = Ubuntu_22_base
+BASE_VM_NAME = ubuntu_22_base
 BASE_VM_SRC = base/
 BASE_VM_OUT_DIR = $(TMP_DIR)/$(BASE_VM_NAME)
 BASE_VM_OUT_IMAGE = $(BASE_VM_OUT_DIR)/$(BASE_VM_NAME).qcow2
@@ -67,11 +67,10 @@ labvm_clean:
 
 # Quickly edit an already-generated Lab VM image
 labvm_edit: PAUSE=1
-labvm_edit: | $(LAB_VM_OUT_IMAGE)
+labvm_edit:
+	rm -rf "$(LAB_VM_OUT_DIR)_tmp/"
 	$(call packer_gen_build, $(LAB_VM_SRC), \
 		$(LAB_VM_NAME)_tmp, $(LAB_VM_OUT_IMAGE))
-labvm_edit_clean:
-	rm -rf "$(LAB_VM_OUT_DIR)_tmp/"
 # commits the edited image back to the original
 LAB_VM_TMP_OUT_IMAGE = $(LAB_VM_OUT_DIR)_tmp/$(LAB_VM_NAME)_tmp.qcow2
 labvm_commit:
