@@ -27,7 +27,15 @@ usermod -aG docker student || true
 # customize docker daemon.json
 cat << EOF > /etc/docker/daemon.json
 {
-  "features": {"buildkit": true}
+	"mtu": 1450,
+	"exec-opts": ["native.cgroupdriver=systemd"],
+	"features": { "buildkit": true },
+	"experimental": true,
+	"cgroup-parent": "docker.slice",
+	"iptables": false,
+	"bridge": "none",
+	"ip-forward": false,
+	"ipv6": true
 }
 EOF
 # enable + [re]start docker
