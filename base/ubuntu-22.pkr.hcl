@@ -11,7 +11,7 @@ variables {
   vm_name = "ubuntu-22-base"
   vm_pause = 0
   vm_debug = 0
-  source_image = "http://cdimage.ubuntu.com/releases/22.04.1/release/ubuntu-22.04.1-live-server-arm64.iso"
+  source_image = "https://releases.ubuntu.com/22.04.1/ubuntu-22.04.1-live-server-amd64.iso"
   source_checksum = "none"
   output_directory = "/tmp/packer-out"
   boot_wait = "5s"
