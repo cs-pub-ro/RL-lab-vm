@@ -1,12 +1,13 @@
 # RL Lab virtual machine source code
 
-This repository contains the RL Lab VM generation scripts.
+This repository contains the RL (Networking 101) Lab VM generation scripts.
 The process is automated using `qemu` and Packer (check the requirements below).
 
 Requirements:
- - a modern Linux system with [packer](https://packer.io/), [qemu+kvm](https://qemu.org/);
+ - a modern Linux system;
  - basic build tools (make);
- - `python3` and `python3-yaml`;
+ - [Hashicorp's Packer](https://packer.io/);
+ - [qemu+kvm](https://qemu.org/);
 
 ## Preparation
 
@@ -16,10 +17,8 @@ git submodule init
 git submodule update
 ```
 
-Download and save a [Ubuntu 18.04 Server alternative
-install](http://cdimage.ubuntu.com/releases/18.04.6/release/) .iso image.
-WARNING: **DO NOT** use the `live-server` ISO (it doesn't work for unattended
-install purposes)!
+Download and save a [Ubuntu 22.04 Live Server
+install](http://cdimage.ubuntu.com/releases/22.04.1/release/) iso image.
 
 Copy `local.sample.mk` as `local.mk` and edit it to point to the downloaded
 Ubuntu Server `.iso` on your disk. You might also want to change `TMP_DIR`
@@ -35,18 +34,21 @@ order):
 
 - `base`: builds a base Ubuntu 18.04 install (required for the VM image);
 - `labvm`: builds the Lab VM with all required scripts and config;
-- `labvm_edit`: easily edit an already build Lab VM (uses the previous
-  image as backing snapshot);
-- `labvm_commit`: commits the edited VM back to its `labvm` base;
 - `cloudvm`: builds (from `labvm` VM) the cloud VM, cleaned up and ready
   for cloud usage (e.g., AWS, OpenStack).
+- `labvm_edit`: easily edit an already build Lab VM (uses the previous
+  image as backing snapshot);
+- `labvm_commit`: commits the edited VM back to its backing base;
+- `[*]_clean`: removes the generated image(s);
 - `ssh`: SSH-es into a running Packer VM;
 
 If packer complains about the output file existing, you must either manually
 delete the generated VM from inside `TMP_DIR`, or set the `DELETE=1` makefile
 variable (but be careful):
 ```sh
-make DELETE=1 labvm_edit
+make DELETE=1 labvm
+# labvm_edit does this automatically:
+make labvm
 ```
 
 If you want to keep the install scripts at the end of the provisioning phase,
@@ -59,5 +61,5 @@ make PAUSE=1 DEBUG=1 labvm_edit
 ## TODO
 
 Still TODO: image conversion and project generation for VMWare / VirtualBox
-/ LibVirt / etc?.
+/ LibVirt XML / etc?.
 
