@@ -105,7 +105,7 @@ cloudvm_edit: | $(CLOUD_VM_OUT_IMAGE)
 		$(CLOUD_VM_NAME)_tmp, $(CLOUD_VM_OUT_IMAGE))
 
 cloudvm_clean:
-	rm -rf "$(TMP_DIR)/$(CLOUD_VM_NAME)/"
+	rm -rf "$(CLOUD_VM_OUT_DIR)/"
 
 .PHONY: cloudvm cloudvm_edit cloudvm_clean
 

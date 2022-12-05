@@ -8,7 +8,7 @@ packer {
 }
 
 variables {
-  vm_name = "si-lab-vm"
+  vm_name = "rl-lab-vm"
   vm_pause = 0
   vm_debug = 0
   vm_noinstall = 0
@@ -66,7 +66,7 @@ build {
     ]
   }
   provisioner "file" {
-  source = "scripts/"
+    source = "scripts/"
     destination = "/home/student/install"
   }
   provisioner "file" {
