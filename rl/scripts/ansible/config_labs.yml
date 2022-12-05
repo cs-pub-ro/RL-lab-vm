@@ -4,6 +4,7 @@
   vars:
     lab_git_url: "https://github.com/cs-pub-ro/RL-linux-labs.git"
     lab_path: "{{ lookup('env', 'LABS_DEST') | default('/opt/rl-labs', True) }}"
+    vm_debug: "{{ lookup('env', 'VM_DEBUG') }}"
   tasks:
     # - name: Disable network abstractization and enable IPv6
     #   copy:
@@ -32,6 +33,7 @@
 
     - name: Set the update required flag
       command: "touch {{ lab_path }}/.update-required" 
+      when: "(vm_debug == '') or (vm_debug == '0')"
 
     # manual: ansible-galaxy collection install community.general.docker_image
     # - name: Build RL Lab Docker Image
