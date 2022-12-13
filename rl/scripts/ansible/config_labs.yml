@@ -25,12 +25,6 @@
     - name: Run the rl-labs build script
       command: "{{ lab_path }}/build.sh" 
 
-    - name: Git config trust repo
-      command: "git config --global --add safe.directory /opt/rl-labs"
-
-    - name: Git config trust repo (student)
-      command: "sudo -u student git config --global --add safe.directory /opt/rl-labs"
-
     - name: Set the update required flag
       command: "touch {{ lab_path }}/.update-required" 
       when: "(vm_debug == '') or (vm_debug == '0')"

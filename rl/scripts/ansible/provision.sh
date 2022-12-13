@@ -19,7 +19,7 @@ LABS_SRC="$SRC/thirdparty/labs"
 LABS_DEST="/opt/rl-labs"
 if [[ ! -f "$LABS_SRC" ]]; then
 	rm -rf "$LABS_DEST"
-	cp -ar "$LABS_SRC" "$LABS_DEST"
+	rsync -a --chown=root:root --mkpath "$LABS_SRC/" "$LABS_DEST/"
 else
 	echo "Warning: missing '$LABS_SRC'!" \
 		"Lab scripts will NOT be present in this image..." >&2
