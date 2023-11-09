@@ -7,7 +7,7 @@ update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 # install ansible
 sudo apt-get update
 sudo apt-get install -y software-properties-common
-sudo apt-add-repository --yes --update ppa:ansible/ansible
+sudo apt-add-repository --yes --update ppa:ansible/ansible-7
 sudo apt-get install -y ansible
 
 # install community modules
