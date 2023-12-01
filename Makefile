@@ -20,7 +20,7 @@ basevm-packer-src = $(FRAMEWORK_DIR)/basevm
 basevm-src-image = $(BASE_VM_INSTALL_ISO)
 
 # VM with RL lab customizations
-labvm-ver = 2023
+labvm-ver = $(RL_LABVM_VERSION)
 labvm-name = RL_$(labvm-ver)
 labvm-packer-src = ./labvm
 labvm-src-image = $(basevm-dest-image)
