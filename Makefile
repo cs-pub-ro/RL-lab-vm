@@ -1,5 +1,4 @@
-##
-## Top-level makefile for example (template) VM
+## Top-level makefile for RL Lab VM
 ##
 
 FRAMEWORK_DIR ?= ./framework

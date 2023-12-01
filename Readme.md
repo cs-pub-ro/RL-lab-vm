@@ -18,10 +18,10 @@ git submodule update
 ```
 
 Download and save a [Ubuntu 22.04 Live Server
-install](http://cdimage.ubuntu.com/releases/22.04.1/release/) iso image.
+install](https://ubuntu.com/download/server) iso image.
 
-Copy `local.sample.mk` as `local.mk` and edit it to point to the downloaded
-Ubuntu Server `.iso` on your disk. You might also want to change `TMP_DIR`
+Copy `config.sample.mk` as `config.local.mk` and edit it to point to the downloaded
+Ubuntu Server `.iso` on your disk. You might also want to change `BUILD_DIR`
 somewhere with 10GB free space and/or a faster drive (SSD recommended :P).
 
 You might also want to ensure that packer and qemu are properly installed and
@@ -32,7 +32,7 @@ configured.
 The following Makefile goals are available (the build process is usually in this
 order):
 
-- `base`: builds a base Ubuntu 18.04 install (required for the VM image);
+- `base`: builds a base Ubuntu LTS install (required for the VM image);
 - `labvm`: builds the Lab VM with all required scripts and config;
 - `cloudvm`: builds (from `labvm` VM) the cloud VM, cleaned up and ready
   for cloud usage (e.g., AWS, OpenStack).
@@ -43,7 +43,7 @@ order):
 - `ssh`: SSH-es into a running Packer VM;
 
 If packer complains about the output file existing, you must either manually
-delete the generated VM from inside `TMP_DIR`, or set the `DELETE=1` makefile
+delete the generated VM from inside `BUILD_DIR`, or set the `DELETE=1` makefile
 variable (but be careful):
 ```sh
 make DELETE=1 labvm
