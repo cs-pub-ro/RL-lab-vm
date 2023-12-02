@@ -1,6 +1,6 @@
 [submodule "thirdparty/labs"]
 	path = thirdparty/labs
-	url = https://github.com/cs-pub-ro/RL-linux-labs.git
+	url = git@github.com:cs-pub-ro/RL-linux-labs.git
 	branch = master
 [submodule "framework"]
 	path = framework
