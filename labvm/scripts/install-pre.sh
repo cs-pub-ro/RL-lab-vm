@@ -25,7 +25,7 @@ apt-get -y upgrade
 # remove older kernels
 apt-get -y --purge autoremove
 # virtualization drivers & base networking
-apt-get install --no-install-recommends -y open-vm-tools iproute2 ifupdown
+apt-get install --no-install-recommends -y open-vm-tools iproute2 ifupdown-ng
 
 # Change hostname to host
 if [[ "$(hostname)" != "host" ]]; then

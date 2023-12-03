@@ -1,18 +1,14 @@
-# Persistent network interfaces
-#
-# Note: Ubuntu 18.04 uses netplan by default (has a different, YAML-based
-# interface definition structure), so we installed `ifupdown` to revert back to using the classic
-# /etc/network/interfaces configuration style.
-#
+# Persistent network interfaces (ifupdown-ng)
+# RTFM: https://github.com/ifupdown-ng/ifupdown-ng/blob/main/doc/interfaces.scd
 
 # The loopback network interface
 auto lo
-iface lo inet loopback
 
 # The primary network interface
 auto eth0
-iface eth0 inet dhcp
+iface eth0
+	use dhcp
 
-# Add your own here or inside /etc/network/interfaces.d/ (recommended).
-source /etc/network/interfaces.d/*
+# Load everything inside interfaces.d subdirectory (recommended)
+source-directory /etc/network/interfaces.d/
 
