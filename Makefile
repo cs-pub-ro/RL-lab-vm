@@ -23,7 +23,7 @@ basevm-src-image = $(BASE_VM_INSTALL_ISO)
 labvm-ver = $(RL_LABVM_VERSION)
 labvm-name = RL_$(labvm-ver)
 labvm-packer-src = ./labvm
-labvm-src-image = $(basevm-dest-image)
+labvm-src-from = basevm
 define labvm-extra-rules=
 .PHONY: labvm_compact labvm_zerofree
 labvm_zerofree: labvm_compact
@@ -34,7 +34,7 @@ endef
 # Cloud-init image
 cloudvm-name = RL_$(labvm-ver)_cloud
 cloudvm-packer-src = $(FRAMEWORK_DIR)/cloudvm
-cloudvm-src-image = $(labvm-dest-image)
+cloudvm-src-from = labvm
 define cloudvm-extra-rules=
 .PHONY: cloudvm_compact cloudvm_zerofree
 cloudvm_zerofree: cloudvm_compact
