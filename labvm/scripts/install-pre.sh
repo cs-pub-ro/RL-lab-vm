@@ -26,6 +26,9 @@ apt-get -y upgrade
 apt-get -y --purge autoremove
 # virtualization drivers & base networking
 apt-get install --no-install-recommends -y open-vm-tools iproute2 ifupdown-ng
+# disable systemd-networkd
+systemctl disable systemd-networkd
+systemctl disable systemd-networkd-wait-online
 
 # Change hostname to host
 if [[ "$(hostname)" != "host" ]]; then
