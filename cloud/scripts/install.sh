@@ -28,6 +28,10 @@ rm -f /etc/cloud/cloud.cfg.d/50-curtin-networking.cfg \
 rm -f /etc/cloud/ds-identify.cfg
 rm -f /etc/netplan/*.yaml
 
+# enable old rsa-sha host keys (for old Guacamole versions...)
+echo "HostkeyAlgorithms +ssh-rsa" > /etc/ssh/sshd_config.d/30-legacy-algs.conf
+echo "PubkeyAcceptedAlgorithms +ssh-rsa" >> /etc/ssh/sshd_config.d/30-legacy-algs.conf
+
 # copy our custom cloud-init config
 rsync -ai --chown="root:root" "$SRC/etc/" "/etc/"
 
