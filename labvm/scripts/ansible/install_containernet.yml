@@ -33,8 +33,11 @@
     - name: install pytest
       pip: name=pytest executable={{pip_path.stdout}}
   
-    - name: install docker py
-      pip: name=docker executable={{pip_path.stdout}}
+    # - name: install docker py
+    #   pip: name=docker<7.0.0 executable={{pip_path.stdout}}
+    #
+    # - name: install requests
+    #   pip: name=requests<2.32.0 executable={{pip_path.stdout}}
   
     - name: install python-iptables
       pip: name=python-iptables state=latest executable={{pip_path.stdout}}

@@ -10,6 +10,9 @@ sudo apt-get install -y software-properties-common
 sudo apt-add-repository --yes --update ppa:ansible/ansible-7
 sudo apt-get install -y ansible
 
+pip3 uninstall requests
+pip3 install 'requests<2.32.0' 'docker<7.0.0'
+
 # install community modules
 ansible-galaxy collection install community.general
 ansible-galaxy install kwoodson.yedit
