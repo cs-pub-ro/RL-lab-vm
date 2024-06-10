@@ -1,17 +1,15 @@
 #!/bin/bash
 # Base install (requiring reboot)
 # Everything should run as root
-set -e
 
+set -eo pipefail
 export SRC="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
-
 chmod +x "$SRC/"*.sh
+source "$SRC/_common.sh"
 
-echo "Waiting for the VM to fully boot..."
-while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && \
-	[ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do sleep 2; done
+wait_for_vm_boot
 
-if [[ "$RL_NOINSTALL" == "1" ]]; then
+if [[ "$VM_NOINSTALL" == "1" ]]; then
 	exit 0
 fi
 
@@ -20,12 +18,15 @@ locale-gen "en_US.UTF-8"
 localectl set-locale LANG=en_US.UTF-8
 
 export DEBIAN_FRONTEND=noninteractive
+# remove some useless packages like snapd and stock docker
+apt-get purge snapd docker.io || true
 apt-get update
 apt-get -y upgrade
 # remove older kernels
 apt-get -y --purge autoremove
 # virtualization drivers & base networking
 apt-get install --no-install-recommends -y open-vm-tools iproute2 ifupdown-ng
+
 # disable systemd-networkd
 systemctl disable systemd-networkd
 systemctl disable systemd-networkd-wait-online

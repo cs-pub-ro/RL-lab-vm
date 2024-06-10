@@ -25,9 +25,9 @@
     - name: Run the rl-labs build script
       command: "{{ lab_path }}/build.sh" 
 
-    - name: Set the update required flag
-      command: "touch {{ lab_path }}/.update-required" 
-      when: "(vm_debug == '') or (vm_debug == '0')"
+    # - name: Set the update required flag
+    #   command: "touch {{ lab_path }}/.update-required" 
+    #   when: "(vm_debug == '') or (vm_debug == '0')"
 
     # manual: ansible-galaxy collection install community.general.docker_image
     # - name: Build RL Lab Docker Image

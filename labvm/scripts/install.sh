@@ -1,35 +1,22 @@
 #!/bin/bash
-# Main RL VM provisioning entrypoint
+# Main VM provisioning entrypoint
 # Everything should run as root
-set -e
+set -eo pipefail
 
 export SRC="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
-
 chmod +x "$SRC/"*.sh
 
-echo "Waiting for the VM to fully boot..."
-while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && \
-	[ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do sleep 2; done
+INSIDE_INSTALL_SCRIPT=1
+source "$SRC/_common.sh"
+wait_for_vm_boot
 
-if [[ "$RL_NOINSTALL" == "1" ]]; then
+if [[ "$VM_NOINSTALL" == "1" ]]; then
 	exit 0
 fi
 
-source "$SRC/_common.sh"
-. "$SRC/packages.sh"
-. "$SRC/services.sh"
-. "$SRC/tweaks.sh"
-
-# use ansible for the rest of the provisioning process
-. "$SRC/ansible/provision.sh"
-
-# Cleanup the system
-apt-get -y purge libgl1-mesa-dri
-apt-get -y --purge autoremove
-apt-get -y autoclean
-if [[ "$VM_DEBUG" != "1" ]]; then
-	rm -rf /home/student/install*
-	rm -f /home/student/.bash_history
-	rm -f /root/.bash_history
-fi
+# run all installation tasks (in order)
+while IFS=  read -r -d $'\0' file; do
+	echo "> Running $(basename "$file")"
+	source "$file"
+done < <(find "$SRC/tasks/" '(' -type f -iname '*.sh' ')' -print0 | sort -n -z)
 

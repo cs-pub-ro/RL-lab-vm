@@ -1,19 +1,19 @@
 #!/bin/bash
-set -e
+# VM Services install / configuration script
+[[ "$INSIDE_INSTALL_SCRIPT" == "1" ]] || { echo "Direct calls not supported!">&2; exit 5; }
 
 echo "Installing & configuring services..." >&2
-export DEBIAN_FRONTEND=noninteractive
 
 # Use Systemd presets to disable services by default
 SYSTEMD_PRESET_FILE=/etc/systemd/system-preset/90-default-servers.preset
 mkdir -p /etc/systemd/system-preset/
 
 # network services: telnetd, vsftpd
+rsync -rvh --chown=root --chmod=755 "$SRC/files/etc/vsftpd.conf" /etc
 apt-get install --no-install-recommends -y telnetd vsftpd
-# TODO: configs?
 
 # apache2
-apt-get install --no-install-recommends -y apache2
+apt-get install --no-install-recommends -y apache2 libapache2-mod-php
 
 # postfix, courier
 echo "postfix postfix/mailname string host" | debconf-set-selections
