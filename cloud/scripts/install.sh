@@ -53,10 +53,6 @@ else
 	sed -i "s/.*PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config
 fi
 
-# cloud-init systemd dependencies hack
-sed -i '/Before=sysinit.target/d' /usr/lib/systemd/system/cloud-init.service
-systemctl daemon-reload
-
 # Cleanup & sysprep
 apt-get -y autoremove
 apt-get -y clean
