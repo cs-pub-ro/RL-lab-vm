@@ -49,7 +49,7 @@ echo "blacklist floppy" > /etc/modprobe.d/blacklist-floppy.conf
 dpkg-reconfigure initramfs-tools
 
 # Use old interface names (ethX) + disable qxl modeset (spice is buggy)
-GRUB_CMDLINE_LINUX="quiet net.ifnames=0 biosdevname=0 nomodeset"
+GRUB_CMDLINE_LINUX="quiet net.ifnames=0 biosdevname=0"
 # disable cgroupv1 (docker might still use it... or smth')
 GRUB_CMDLINE_LINUX+=" cgroup_no_v1=all"
 sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"$GRUB_CMDLINE_LINUX\"/g" /etc/default/grub

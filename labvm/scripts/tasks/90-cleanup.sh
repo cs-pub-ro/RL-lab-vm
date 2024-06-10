@@ -6,8 +6,10 @@ if [[ "$VM_INSTALL_GUI" != "1" ]]; then
 	apt-get -y purge libgl1-mesa-dri
 fi
 
-apt-get -y --purge autoremove
+echo "Cleaning up files..."
+apt-get clean
 apt-get -y autoclean
+apt-get -y --purge autoremove
 
 if [[ "$VM_DEBUG" != "1" ]]; then
 	# Cleanup the system

@@ -34,6 +34,11 @@ echo -e "HostkeyAlgorithms +ssh-rsa\nPubkeyAcceptedAlgorithms +ssh-rsa" > /etc/s
 # copy our custom cloud-init config
 rsync -ai --chown="root:root" "$SRC/etc/" "/etc/"
 
+# Use old interface names (ethX) + disable qxl modeset (spice is buggy)
+GRUB_CMDLINE_LINUX="quiet net.ifnames=0 biosdevname=0 nomodeset"
+# disable cgroupv1 (docker might still use it... or smth')
+GRUB_CMDLINE_LINUX+=" cgroup_no_v1=all"
+sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"$GRUB_CMDLINE_LINUX\"/g" /etc/default/grub
 # update grub to replace kernel cmdline
 GRUB_CMDLINE_VIRT="modprobe.blacklist=floppy console=ttyS0,115200n8 no_timer_check edd=off"
 sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT=\"$GRUB_CMDLINE_VIRT\"/g" /etc/default/grub
