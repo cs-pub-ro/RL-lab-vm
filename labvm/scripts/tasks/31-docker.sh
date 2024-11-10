@@ -27,6 +27,11 @@ cat << EOF > /etc/docker/daemon.json
 }
 EOF
 
+# dunno why these are wrong...
+mkdir -p /home/student/.docker
+chown student:student -R /home/student/.docker
+chmod 755 -R /home/student/.docker
+
 # enable docker by default
 systemctl restart docker
 systemctl enable docker
