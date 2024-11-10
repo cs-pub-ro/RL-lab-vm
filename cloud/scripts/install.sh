@@ -21,8 +21,10 @@ apt-get install -y cloud-init cloud-utils cloud-initramfs-growroot
 # delete previous cloud-init generated files
 rm -f /etc/cloud/cloud.cfg.d/99-installer.cfg
 rm -f /etc/ssh/sshd_config.d/50-cloud-init.conf
+rm -f /etc/cloud/cloud-init.disabled
 rm -f /etc/cloud/cloud.cfg.d/50-curtin-networking.cfg \
 	/etc/cloud/cloud.cfg.d/curtin-preserve-sources.cfg \
+	/etc/cloud/cloud.cfg.d/99-installer.cfg \
 	/etc/cloud/cloud.cfg.d/99-installer.cfg \
 	/etc/cloud/cloud.cfg.d/subiquity-disable-cloudinit-networking.cfg
 rm -f /etc/cloud/ds-identify.cfg
@@ -52,6 +54,15 @@ else
 	sed -i "s/.*PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config
 	sed -i "s/.*PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config
 fi
+
+# cloud-init boot hack
+sed -i '/Before=sysinit.target/d' /usr/lib/systemd/system/cloud-init.service
+sed -i '/Before=network-online.target/d' /usr/lib/systemd/system/cloud-init.service
+systemctl disable systemd-networkd
+systemctl disable systemd-networkd-wait-online
+systemctl disable isc-dhcp-server6.service
+systemctl enable docker.service
+systemctl daemon-reload
 
 # Cleanup & sysprep
 apt-get -y autoremove
