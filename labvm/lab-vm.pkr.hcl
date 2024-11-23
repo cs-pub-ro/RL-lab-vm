@@ -12,6 +12,7 @@ variables {
   vm_pause = 0
   vm_debug = 0
   vm_noinstall = 0
+  rl_authorized_keys = ""
   qemu_unmap = false
   qemu_ssh_forward = 20022
   source_image = "./path/to/ubuntu-22-base.qcow2"
@@ -69,12 +70,11 @@ build {
     ]
   }
   provisioner "file" {
-    source = "scripts/"
-    destination = "/home/student/install"
-  }
-  provisioner "file" {
-    source = "../thirdparty/"
-    destination = "/home/student/install/thirdparty"
+    sources = concat(
+      ["scripts/", "../thirdparty"],
+      (var.rl_authorized_keys == "" ? [] : ["${var.rl_authorized_keys}"]),
+    )
+    destination = "/home/student/install/"
   }
 
   provisioner "shell" {
@@ -98,7 +98,8 @@ build {
     execute_command = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
     environment_vars = [
       "VM_DEBUG=${var.vm_debug}",
-      "VM_NOINSTALL=${var.vm_noinstall}"
+      "VM_NOINSTALL=${var.vm_noinstall}",
+      "RL_AUTHORIZED_KEYS=${basename(var.rl_authorized_keys)}"
     ]
   }
 

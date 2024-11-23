@@ -10,3 +10,9 @@ BASE_VM_INSTALL_ISO ?= $(HOME)/Downloads/ubuntu-22.04.3-live-server-amd64.iso
 # E.g., move build output (VM destination) directory to an external drive
 #BUILD_DIR ?= /media/myssd/tmp/packer
 
+# Preload VM with SSH keys (NOTE: relative to labvm/ dir!)
+#RL_AUTHORIZED_KEYS=../dist/authorized_keys
+
+# Password for cloud VM's console
+#RL_CLOUD_VM_PASSWORD=rlrullz  # change this
+

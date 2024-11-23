@@ -23,6 +23,7 @@ basevm-src-image = $(BASE_VM_INSTALL_ISO)
 labvm-ver = $(RL_LABVM_VERSION)
 labvm-name = RL_$(labvm-ver)
 labvm-packer-src = ./labvm
+labvm-packer-args += -var "rl_authorized_keys=$(RL_AUTHORIZED_KEYS)"
 labvm-src-from = basevm
 define labvm-extra-rules=
 .PHONY: labvm_compact labvm_zerofree
