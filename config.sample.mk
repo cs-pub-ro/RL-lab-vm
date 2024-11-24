@@ -13,6 +13,6 @@ BASE_VM_INSTALL_ISO ?= $(HOME)/Downloads/ubuntu-22.04.3-live-server-amd64.iso
 # Preload VM with SSH keys (NOTE: relative to labvm/ dir!)
 #RL_AUTHORIZED_KEYS=../dist/authorized_keys
 
-# Password for cloud VM's console
-#RL_CLOUD_VM_PASSWORD=rlrullz  # change this
+# Password for cloud VM's console (admin user)
+#RL_CLOUD_ADMIN_PASSWORD=rlrullz  # change this
 

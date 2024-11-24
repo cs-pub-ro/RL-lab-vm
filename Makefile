@@ -35,7 +35,7 @@ endef
 # Cloud-init image
 cloudvm-name = RL_$(labvm-ver)_cloud
 cloudvm-packer-src = ./cloud
-cloudvm-packer-args = -var "rl_password=$(RL_CLOUD_VM_PASSWORD)"
+cloudvm-packer-args = -var "rl_admin_password=$(RL_CLOUD_ADMIN_PASSWORD)"
 cloudvm-src-from = labvm
 define cloudvm-extra-rules=
 .PHONY: cloudvm_compact cloudvm_zerofree

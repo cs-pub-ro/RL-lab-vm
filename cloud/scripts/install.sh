@@ -41,18 +41,20 @@ GRUB_CMDLINE_VIRT="modprobe.blacklist=floppy console=ttyS0,115200n8 no_timer_che
 sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT=\"$GRUB_CMDLINE_VIRT\"/g" /etc/default/grub
 update-grub
 
-# Change root/student account passwords, if requested
-if [[ -n "$RL_PASSWORD" ]]; then
-	echo "root:$RL_PASSWORD" | chpasswd
-	echo "student:$RL_PASSWORD" | chpasswd
+# disable ssh password & root login
+sed -i "s/.*PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config
+sed -i "s/.*PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config
 
-	# enable ssh password-based login
-	sed -i "s/.*PasswordAuthentication.*/PasswordAuthentication yes/g" /etc/ssh/sshd_config
-	sed -i "s/.*PermitRootLogin.*/PermitRootLogin yes/g" /etc/ssh/sshd_config
+# Set admin credentials
+if [[ -n "$RL_ADMIN_PASSWORD" ]]; then
+	echo "admin:$RL_ADMIN_PASSWORD" | chpasswd
+	# enable password auth for 'admin'
+	cat <<EOF >"/etc/ssh/sshd_config.d/20-admin-auth.conf"
+Match User "admin"
+	PasswordAuthentication yes
+EOF
 else
-	# disable ssh password & root login
-	sed -i "s/.*PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config
-	sed -i "s/.*PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config
+	rm -f "/etc/ssh/sshd_config.d/20-admin-auth.conf"
 fi
 
 # cloud-init boot hack

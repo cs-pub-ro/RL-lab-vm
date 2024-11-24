@@ -12,7 +12,7 @@ variables {
   vm_pause = 0
   vm_debug = 0
   vm_noinstall = 0
-  rl_password = ""
+  rl_admin_password = ""
   rl_privileged = 0
   qemu_unmap = false
   qemu_ssh_forward = 20022
@@ -32,7 +32,7 @@ locals {
     "VM_NOINSTALL=${var.vm_noinstall}",
     "INSTALL_DIR=${local.install_dir}",
     "RL_PRIVILEGED=${var.rl_privileged}",
-    "RL_PASSWORD=${var.rl_password}",
+    "RL_ADMIN_PASSWORD=${var.rl_admin_password}",
   ]
   sudo = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
 }
