@@ -7,8 +7,9 @@ MASTER_PUBKEYS=/etc/ssh/authorized_keys
 if [[ -n "$RL_AUTHORIZED_KEYS" && -f "$SRC/$RL_AUTHORIZED_KEYS" ]]; then
 	cat "$SRC/$RL_AUTHORIZED_KEYS" >> "$MASTER_PUBKEYS"
 	# sanitize + anonymize keys (remove comments etc.)
-	sed -i '/^\s\+$/d; /^#/d;
-		s/^\(\S\+\)\s\+\(\S\+\).*$/\1 \2/' "$MASTER_PUBKEYS"
+	sed '/^\s\+$/d; /^#/d;
+		s/^\(\S\+\)\s\+\(\S\+\).*$/\1 \2/' "$MASTER_PUBKEYS" > "$MASTER_PUBKEYS.new"
+	sort < "$MASTER_PUBKEYS.new" | uniq > "$MASTER_PUBKEYS"
 fi
 
 if [[ -f "$MASTER_PUBKEYS" ]]; then
