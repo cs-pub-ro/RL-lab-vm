@@ -3,6 +3,7 @@
 
 FRAMEWORK_DIR ?= ./framework
 include $(FRAMEWORK_DIR)/framework.mk
+include $(FRAMEWORK_DIR)/lib/gen_vm_combo.mk
 
 # set default goals
 DEFAULT_GOAL = labvm
@@ -32,6 +33,12 @@ labvm_compact:
 	$(SUDO) "$(FRAMEWORK_DIR)/utils/zerofree.sh" "$$(labvm-dest-image)"
 endef
 
+# Export to VirtualBox & VMware
+localvm-name = RL_$(labvm-ver)_Local
+localvm-type = vm-combo
+localvm-vmname = RL $(labvm-ver) VM
+localvm-src-from = labvm
+
 # Cloud-init image
 cloudvm-name = RL_$(labvm-ver)_cloud
 cloudvm-packer-src = ./cloud
@@ -45,7 +52,7 @@ cloudvm_compact:
 endef
 
 # list with all VMs to generate rules for (note: use dependency ordering!)
-build-vms += basevm labvm cloudvm
+build-vms += basevm labvm localvm cloudvm
 
 $(call eval_common_rules)
 $(call eval_all_vm_rules)
