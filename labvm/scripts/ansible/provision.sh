@@ -5,9 +5,8 @@ export DEBIAN_FRONTEND=noninteractive
 update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 
 # install ansible
-sudo apt-get update
-sudo apt-get install -y software-properties-common
 sudo apt-add-repository --yes --update ppa:ansible/ansible-7
+sudo apt-get update
 sudo apt-get install -y ansible
 
 pip3 uninstall -y requests
@@ -18,7 +17,7 @@ ansible-galaxy collection install community.general
 ansible-galaxy install kwoodson.yedit
 
 # copy the lab scripts
-LABS_SRC="$SRC/thirdparty/labs"
+LABS_SRC="$RL_SRC/thirdparty/labs"
 LABS_DEST="/opt/rl-labs"
 if [[ ! -f "$LABS_SRC" ]]; then
 	rm -rf "$LABS_DEST"
@@ -31,7 +30,7 @@ fi
 # run the ansible playbook to install / configure the lab environment
 (
 	export LABS_DEST
-	cd "$SRC/ansible"
+	cd "$RL_SRC/ansible"
 	ansible-playbook -i inventory -c local install.yml
 )
 

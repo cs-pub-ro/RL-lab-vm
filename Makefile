@@ -23,10 +23,14 @@ labvm-ver = $(RL_LABVM_VERSION)
 labvm-prefix = RL_$(labvm-ver)
 
 # VM with RL lab customizations
+$(call vm_new_layer_full_featured,labvm)
 labvm-name = $(labvm-prefix)
-labvm-packer-src = ./labvm
-labvm-packer-args += -var "rl_authorized_keys=$(RL_AUTHORIZED_KEYS)"
 labvm-src-from = base
+# git introduces files without write access which packer cannot overwrite...
+labvm-pre-copy-cmd = rm -rf thirdparty
+labvm-script-prepare = rl-prepare.sh
+labvm-copy-scripts += $(abspath ./labvm/scripts)/
+labvm-copy-scripts += $(abspath ./thirdparty)
 labvm-extra-rules += $(vm_zerofree_rule)
 
 # Export to VirtualBox & VMware

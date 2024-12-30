@@ -1,15 +1,15 @@
 #!/bin/bash
+[[ -n "$__INSIDE_VM_RUNNER" ]] || { echo "Only call within VM runner!" >&2; return 1; }
 # VM Services install / configuration script
-[[ "$INSIDE_INSTALL_SCRIPT" == "1" ]] || { echo "Direct calls not supported!">&2; exit 5; }
 
-echo "Installing & configuring services..." >&2
+sh_log_info "Installing & configuring services..."
 
 # Use Systemd presets to disable services by default
 SYSTEMD_PRESET_FILE=/etc/systemd/system-preset/90-default-servers.preset
 mkdir -p /etc/systemd/system-preset/
 
 # network services: telnetd, vsftpd
-rsync -rvh --chown=root --chmod=755 "$SRC/files/etc/vsftpd.conf" /etc
+rsync -rvh --chown=root --chmod=755 "$RL_SRC/rl_files/etc/vsftpd.conf" /etc
 apt-get install --no-install-recommends -y telnetd vsftpd
 
 # apache2
