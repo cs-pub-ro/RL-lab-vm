@@ -1,7 +1,8 @@
 # RL Lab virtual machine source code
 
 This repository contains the RL (Networking 101) Lab VM generation scripts.
-The process is automated using `qemu` and Packer (check the requirements below).
+The process, based on [labvm-framework](https://github.com/cs-pub-ro/labvm-framework),
+is automated using `qemu` and Packer (check the requirements below).
 
 Requirements:
  - a modern Linux system;
@@ -34,11 +35,11 @@ order):
 
 - `base`: builds a base Ubuntu LTS install (required for the VM image);
 - `labvm`: builds the Lab VM with all required scripts and config;
-- `cloudvm`: builds (from `labvm` VM) the cloud VM, cleaned up and ready
-  for cloud usage (e.g., AWS, OpenStack).
 - `labvm_edit`: easily edit an already build Lab VM (uses the previous
   image as backing snapshot);
 - `labvm_commit`: commits the edited VM back to its backing base;
+- `cloud`: builds (from `labvm` VM) the cloud VM, cleaned up and ready
+  for cloud usage (e.g., AWS, OpenStack).
 - `[*]_clean`: removes the generated image(s);
 - `ssh`: SSH-es into a running Packer VM;
 
@@ -58,8 +59,7 @@ letting you inspect the VM inside qemu):
 make PAUSE=1 DEBUG=1 labvm_edit
 ```
 
-## TODO
-
-Still TODO: image conversion and project generation for VMWare / VirtualBox
-/ LibVirt XML / etc?.
+The scripts are based on
+[labvm-framework](https://github.com/cs-pub-ro/labvm-framework), so also check
+out its documentation to develop it.
 
