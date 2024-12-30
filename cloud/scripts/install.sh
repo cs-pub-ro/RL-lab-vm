@@ -59,6 +59,7 @@ fi
 
 # cloud-init boot hack
 sed -i '/Before=sysinit.target/d' /usr/lib/systemd/system/cloud-init.service
+sed -i '/Before=sysinit.target/d' /usr/lib/systemd/system/cloud-init-local.service
 sed -i '/Before=network-online.target/d' /usr/lib/systemd/system/cloud-init.service
 systemctl disable systemd-networkd
 systemctl disable systemd-networkd-wait-online
