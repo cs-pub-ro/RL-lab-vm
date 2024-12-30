@@ -41,13 +41,13 @@ localvm-src-from = labvm
 localvm-extra-rules += $(vm_zerofree_rule)
 
 # Cloud-init image
-cloudvm-name = $(labvm-prefix)_cloud
-cloudvm-packer-src = ./cloud
-cloudvm-packer-args = -var "rl_admin_password=$(RL_CLOUD_ADMIN_PASSWORD)"
-cloudvm-src-from = labvm
-cloudvm-extra-rules += $(vm_zerofree_rule)
+$(call vm_new_layer_cloud,cloud)
+cloud-name = $(labvm-prefix)_cloud
+cloud-src-from = labvm
+cloud-extra-envs = "RL_CLOUD_ADMIN_PASSWORD=$(RL_CLOUD_ADMIN_PASSWORD)",
+cloud-extra-rules += $(vm_zerofree_rule)
 
 # list with all VMs to generate rules for (note: use dependency ordering!)
-build-vms = base labvm localvm cloudvm
+build-vms = base labvm localvm cloud
 
 $(call vm_eval_all_rules)
