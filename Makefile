@@ -9,10 +9,6 @@ include $(FRAMEWORK_DIR)/lib/inc_all.mk
 # set default goals
 DEFAULT_GOAL = labvm
 INIT_GOAL = labvm
-
-# custom variables
-NOINSTALL ?=
-PACKER_ARGS_EXTRA = $(call _packer_var,vm_noinstall,$(NOINSTALL))
 SUDO ?= sudo
 
 # Fresh Ubuntu Server base VM
@@ -44,6 +40,7 @@ localvm-extra-rules += $(vm_zerofree_rule)
 $(call vm_new_layer_cloud,cloud)
 cloud-name = $(labvm-prefix)_cloud
 cloud-src-from = labvm
+cloud-copy-scripts += $(abspath ./cloud/scripts)/
 cloud-extra-envs = "RL_CLOUD_ADMIN_PASSWORD=$(RL_CLOUD_ADMIN_PASSWORD)",
 cloud-extra-rules += $(vm_zerofree_rule)
 
