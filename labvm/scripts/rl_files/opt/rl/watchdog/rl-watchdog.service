@@ -1,0 +1,17 @@
+[Unit]
+Description=RL Net Watchdog
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+EnvironmentFile=/etc/environment
+WorkingDirectory=/opt/rl/watchdog
+ExecStart=/opt/rl/watchdog/rl-watchdog.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
