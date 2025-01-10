@@ -8,9 +8,9 @@ usermod -aG docker student || true
 # this will be ran as the `student` / `root` users
 function _install_home_config() {
 	set -e
-	# bashrc:
+	# bashrc (from rl-labs):
 	mkdir -p $HOME/.config
-	install -m755 "$RL_SRC/rl_files/home/bashrc" "$HOME/.bashrc"
+	install -m755 "/opt/rl-labs/base/files/home/bashrc" "$HOME/.bashrc"
 
 	# git config
     git config --global color.ui auto
@@ -48,5 +48,4 @@ function _install_home_config() {
 }
 echo "$(declare -f _install_home_config); _install_home_config" | su -c bash student
 echo "$(declare -f _install_home_config); _install_home_config" | su -c bash root
-
 
