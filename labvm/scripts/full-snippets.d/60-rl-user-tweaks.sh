@@ -31,21 +31,11 @@ function _install_home_config() {
 	# sudo chsh -s /usr/bin/zsh "$USER"
 	# run zsh for user to install plugins
 	zsh -i -c "source ~/.zshrc; exit 0"
-
-	# pwndbg!
-	[[ -d "$HOME/pwndbg" ]] || git clone https://github.com/pwndbg/pwndbg "$HOME/pwndbg"
-	(
-		cd "$HOME/pwndbg";
-		PWNDBG_VENV_PATH=./.venv
-		# create Python virtual environment and install dependencies in it
-		[[ -d "${PWNDBG_VENV_PATH}" ]] || python3 -m venv -- ${PWNDBG_VENV_PATH}
-		PYTHON=${PWNDBG_VENV_PATH}/bin/python
-		# upgrade pip itself
-		${PYTHON} -m pip install --upgrade pip
-		${PWNDBG_VENV_PATH}/bin/pip install -e .
-		echo "source $PWD/gdbinit.py" > "$HOME/.gdbinit"
-	)
 }
-echo "$(declare -f _install_home_config); _install_home_config" | su -c bash student
-echo "$(declare -f _install_home_config); _install_home_config" | su -c bash root
+
+_exported_script="$(declare -p RL_SRC); $(declare -f _install_home_config)"
+for usr in student root; do
+	#chsh -s /usr/bin/zsh "$usr"
+	echo "$_exported_script; _install_home_config" | su -c bash "$usr"
+done
 
