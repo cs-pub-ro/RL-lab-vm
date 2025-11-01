@@ -5,8 +5,8 @@
 # install the configured network management package
 pkg_install --no-install-recommends iproute2 "${RL_NETWORKING_PKG}"
 
-rsync -rvh --chown=root --chmod=755 "$RL_SRC/rl_files/etc/network/" /etc/network/
-rsync -rvh --chown=root --chmod=755 "$RL_SRC/rl_files/etc/rc.local" /etc/
+rsync -rvh --chown=root --chmod=755 "$RL_SRC/files/etc/network/" /etc/network/
+rsync -rvh --chown=root --chmod=755 "$RL_SRC/files/etc/rc.local" /etc/
 
 # DISABLED: cloud-init systemd dependency cycle workaround
 # sed -i '/Before=sysinit.target/d' /usr/lib/systemd/system/cloud-init.service

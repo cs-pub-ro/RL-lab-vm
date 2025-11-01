@@ -9,7 +9,7 @@ SYSTEMD_PRESET_FILE=/etc/systemd/system-preset/90-default-servers.preset
 mkdir -p /etc/systemd/system-preset/
 
 # network services: telnetd, vsftpd
-rsync -rvh --chown=root --chmod=755 "$RL_SRC/rl_files/etc/vsftpd.conf" /etc
+rsync -rvh --chown=root --chmod=755 "$RL_SRC/files/etc/vsftpd.conf" /etc
 apt-get install --no-install-recommends -y telnetd vsftpd
 
 # apache2

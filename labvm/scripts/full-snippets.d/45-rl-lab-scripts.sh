@@ -1,7 +1,7 @@
 #!/bin/bash
 [[ -n "$__INSIDE_VM_RUNNER" ]] || { echo "Only call within VM runner!" >&2; return 1; }
 
-rsync -rvh --chown=root --chmod=755 "$RL_SRC/rl_files/opt/rl/" /opt/rl/
+rsync -rvh --chown=root --chmod=755 "$RL_SRC/files/opt/rl/" /opt/rl/
 
 # copy the lab scripts (separate repo for upgradibility)
 LABS_SRC="$RL_SRC/thirdparty/labs"
@@ -22,5 +22,5 @@ fi
 )
 
 # Install rl-watchdog service
-vm_run_script "$RL_SRC/rl_files/opt/rl/watchdog/install.sh"
+vm_run_script "$RL_SRC/files/opt/rl/watchdog/install.sh"
 

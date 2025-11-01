@@ -27,7 +27,7 @@ MN_PIP="$MN_PYTHON -mpip"
 (
 	set -e
 	cd "$MININET_DEST"
-	export PIP_CONSTRAINT="$RL_SRC/rl_files/mininet/constraints.txt"
+	export PIP_CONSTRAINT="$RL_SRC/files/mininet/constraints.txt"
 	$MN_PIP install docker
 	$MN_PIP install .
 	PYTHON="$MN_PYTHON" make install-mnexec install-manpages
