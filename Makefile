@@ -11,11 +11,11 @@ DEFAULT_GOAL = labvm
 INIT_GOAL = labvm
 SUDO ?= sudo
 
-# Fresh Ubuntu Server base VM
-$(call vm_new_base_ubuntu,base)
-base-ver = 22
+# Fresh Debian base VM
+$(call vm_new_base_debian,base)
+base-ver = 13
 
-labvm-ver = $(RL_LABVM_VERSION)
+labvm-ver = $(RL_LABVM_VERSION)$(ARCH_SUFFIX)
 labvm-prefix = RL_$(labvm-ver)
 
 # VM with RL lab customizations

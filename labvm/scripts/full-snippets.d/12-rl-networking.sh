@@ -13,6 +13,7 @@ rsync -rvh --chown=root --chmod=755 "$RL_SRC/files/etc/rc.local" /etc/
 # systemctl daemon-reload
 
 # disable cloud-init
+mkdir -p /etc/cloud
 touch /etc/cloud/cloud-init.disabled
 
 # Change hostname to host
