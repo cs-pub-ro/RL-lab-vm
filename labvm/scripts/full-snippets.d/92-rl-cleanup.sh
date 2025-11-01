@@ -7,5 +7,8 @@ if [[ "$VM_DEBUG" != "1" ]]; then
 	rm -rf /home/student/install*
 	rm -f /home/student/.bash_history
 	rm -f /root/.bash_history
+	rm -rf /opt/vm-scripts/install-stage*
+	rm -rf /opt/vm-scripts/files
+	rm -rf /opt/vm-scripts/thirdparty
 fi
 
