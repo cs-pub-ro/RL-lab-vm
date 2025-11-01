@@ -1,0 +1,59 @@
+#!/bin/bash
+[[ -n "$__INSIDE_VM_RUNNER" ]] || { echo "Only call within VM runner!" >&2; return 1; }
+# Install forked MiniNet (with Docker containers support)
+
+# dep packages
+pkg_install socat psmisc iperf telnet ethtool help2man net-tools \
+			autoconf automake libtool autotools-dev pkg-config \
+    		openvswitch-switch openvswitch-testcontroller \
+    		python3-pexpect python3-iptables python3-openvswitch \
+    		python3-docker cgroup-tools
+
+# disable/turnoff OVS test controller
+systemctl disable openvswitch-testcontroller
+systemctl stop openvswitch-testcontroller
+
+MININET_DEST="/opt/containernet"
+MININET_GIT_URL=https://github.com/rl-cs-pub-ro/containernet.git
+MININET_GIT_BRANCH="rl2022"
+
+[[ -d "$MININET_DEST" ]] || \
+	git clone --branch="$MININET_GIT_BRANCH" "$MININET_GIT_URL" "$MININET_DEST"
+
+# install mininet inside a virtualenv
+python3 -mvenv "$MININET_DEST/.venv"
+MN_PYTHON="$MININET_DEST/.venv/bin/python3"
+MN_PIP="$MN_PYTHON -mpip"
+(
+	set -e
+	cd "$MININET_DEST"
+	export PIP_CONSTRAINT="$RL_SRC/rl_files/mininet/constraints.txt"
+	$MN_PIP install docker
+	$MN_PIP install .
+	PYTHON="$MN_PYTHON" make install-mnexec install-manpages
+	PYTHON="$MN_PYTHON" make develop
+)
+
+# install the reference OpenFlow controller
+OF_CTRL_SRC="/tmp/openflow-controller"
+rm -rf "$OF_CTRL_SRC"
+git clone "https://github.com/mininet/openflow.git" "$OF_CTRL_SRC"
+(
+	set -e
+	cd "$OF_CTRL_SRC"
+	# Patch controller to handle more than 16 switches
+	patch -p1 < "$MININET_DEST/util/openflow-patches/controller.patch"
+	# build & install
+	./boot.sh
+	./configure
+	make && make install
+)
+
+# install global mn wrappers to invoke mininet's virtualenv
+cat <<EOF > /usr/local/bin/mn_python
+#!/bin/bash
+exec "$MN_PYTHON" "\$@"
+EOF
+chmod +x "/usr/local/bin/mn_python"
+ln -sf /opt/containernet/.venv/bin/mn /usr/local/bin/mn
+
