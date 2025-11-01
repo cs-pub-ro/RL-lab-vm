@@ -9,6 +9,8 @@ LABS_DEST="/opt/rl-labs"
 if [[ -d "$LABS_SRC/.git" ]]; then
 	rm -rf "$LABS_DEST"
 	git clone "$LABS_SRC/" "$LABS_DEST"
+	# also rsync working dir changes, if any (for VM testing)
+	rsync -avh --exclude=".git" "$LABS_SRC/" "$LABS_DEST/"
 else
 	echo "Warning: missing '$LABS_SRC'!" \
 		"Lab scripts will NOT be present in this image..." >&2
