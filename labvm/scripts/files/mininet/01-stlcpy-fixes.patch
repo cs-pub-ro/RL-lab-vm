@@ -1,0 +1,99 @@
+From b05d29ac3145235304c0a71b1166aeb80bb6a22a Mon Sep 17 00:00:00 2001
+From: jsphbyd <josephboyd113@gmail.com>
+Date: Thu, 30 May 2024 23:50:43 -0600
+Subject: [PATCH] updated all occurances of stlcpy to stlcpy1
+
+---
+ datapath/datapath.c                                           | 4 ++--
+ lib/util.c                                                    | 2 +-
+ lib/util.h                                                    | 4 ++--
+ lib/vlog.c                                                    | 2 +-
+ m4/libopenflow.m4                                             | 2 +-
+ .../wireshark-1.0.0-includes/epan/strutil.h                   | 2 +-
+ 6 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/datapath/datapath.c b/datapath/datapath.c
+index 5678ea68..e1402752 100644
+--- a/datapath/datapath.c
++++ b/datapath/datapath.c
+@@ -2065,13 +2065,13 @@ static void set_desc(void)
+ 		return;
+ 
+ 	if (vendor)
+-		strlcpy(mfr_desc, vendor, sizeof(mfr_desc));
++		strlcpy1(mfr_desc, vendor, sizeof(mfr_desc));
+ 	if (name || version)
+ 		snprintf(hw_desc, sizeof(hw_desc), "%s %s",
+ 			 name ? name : "",
+ 			 version ? version : "");
+ 	if (serial)
+-		strlcpy(serial_num, serial, sizeof(serial_num));
++		strlcpy1(serial_num, serial, sizeof(serial_num));
+ }
+ 
+ static int __init dp_init(void)
+diff --git a/lib/util.c b/lib/util.c
+index 21cc28d2..5a7abb92 100644
+--- a/lib/util.c
++++ b/lib/util.c
+@@ -139,7 +139,7 @@ xasprintf(const char *format, ...)
+ }
+ 
+ void
+-strlcpy(char *dst, const char *src, size_t size)
++strlcpy1(char *dst, const char *src, size_t size)
+ {
+     if (size > 0) {
+         size_t n = strlen(src);
+diff --git a/lib/util.h b/lib/util.h
+index fde681fa..bffbe8cd 100644
+--- a/lib/util.h
++++ b/lib/util.h
+@@ -105,8 +105,8 @@ char *xasprintf(const char *format, ...) PRINTF_FORMAT(1, 2) MALLOC_LIKE;
+ char *xvasprintf(const char *format, va_list) PRINTF_FORMAT(1, 0) MALLOC_LIKE;
+ void *x2nrealloc(void *p, size_t *n, size_t s);
+ 
+-#ifndef HAVE_STRLCPY
+-void strlcpy(char *dst, const char *src, size_t size);
++#ifndef HAVE_strlcpy1
++void strlcpy1(char *dst, const char *src, size_t size);
+ #endif
+ 
+ void ofp_fatal(int err_no, const char *format, ...)
+diff --git a/lib/vlog.c b/lib/vlog.c
+index e23d0173..62485d7b 100644
+--- a/lib/vlog.c
++++ b/lib/vlog.c
+@@ -468,7 +468,7 @@ fetch_braces(const char *p, const char *def, char *out, size_t out_size)
+         out[n_copy] = '\0';
+         p += n + 2;
+     } else {
+-        strlcpy(out, def, out_size);
++        strlcpy1(out, def, out_size);
+     }
+     return p;
+ }
+diff --git a/m4/libopenflow.m4 b/m4/libopenflow.m4
+index 58014ed5..d4a24422 100644
+--- a/m4/libopenflow.m4
++++ b/m4/libopenflow.m4
+@@ -164,5 +164,5 @@ AC_DEFUN([OFP_CHECK_LIBOPENFLOW],
+    AC_REQUIRE([OFP_CHECK_RUNDIR])
+    AC_REQUIRE([OFP_CHECK_LOGDIR])
+    AC_REQUIRE([OFP_CHECK_MALLOC_HOOKS])
+-   AC_CHECK_FUNCS([strlcpy])])
++   AC_CHECK_FUNCS([strlcpy1])])
+ 
+diff --git a/utilities/wireshark_dissectors/wireshark-1.0.0-includes/epan/strutil.h b/utilities/wireshark_dissectors/wireshark-1.0.0-includes/epan/strutil.h
+index 4b108175..3e7c4d22 100644
+--- a/utilities/wireshark_dissectors/wireshark-1.0.0-includes/epan/strutil.h
++++ b/utilities/wireshark_dissectors/wireshark-1.0.0-includes/epan/strutil.h
+@@ -218,7 +218,7 @@ char * epan_strcasestr(const char *haystack, const char *needle);
+ /* g_strlcat() does not exist in GLib 1.2[.x] */
+ #if GLIB_MAJOR_VERSION < 2
+ gsize g_strlcat(gchar *dst, const gchar *src, gsize size);
+-gsize g_strlcpy(gchar *dest, const gchar *src, gsize dest_size);
++gsize g_strlcpy1(gchar *dest, const gchar *src, gsize dest_size);
+ #endif
+ 
+ #if GLIB_MAJOR_VERSION < 2

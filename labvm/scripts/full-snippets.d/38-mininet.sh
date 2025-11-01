@@ -10,8 +10,10 @@ pkg_install socat psmisc iperf telnet ethtool help2man net-tools \
     		python3-docker cgroup-tools
 
 # disable/turnoff OVS test controller
-systemctl disable openvswitch-testcontroller
-systemctl stop openvswitch-testcontroller
+if systemd_is_enabled openvswitch-testcontroller; then
+	systemctl disable openvswitch-testcontroller
+	systemctl stop openvswitch-testcontroller
+fi
 
 MININET_DEST="/opt/containernet"
 MININET_GIT_URL=https://github.com/rl-cs-pub-ro/containernet.git
@@ -28,7 +30,9 @@ MN_PIP="$MN_PYTHON -mpip"
 	set -e
 	cd "$MININET_DEST"
 	export PIP_CONSTRAINT="$RL_SRC/files/mininet/constraints.txt"
-	$MN_PIP install docker
+	export PIP_NO_BUILD_ISOLATION=no
+	$MN_PIP install setuptools  # for distutils (removed in 3.12)
+	$MN_PIP install docker      # required by containernet's PIP script
 	$MN_PIP install .
 	PYTHON="$MN_PYTHON" make install-mnexec install-manpages
 	PYTHON="$MN_PYTHON" make develop
@@ -41,12 +45,17 @@ git clone "https://github.com/mininet/openflow.git" "$OF_CTRL_SRC"
 (
 	set -e
 	cd "$OF_CTRL_SRC"
-	# Patch controller to handle more than 16 switches
+	# Apply some patches...
+	patch -p1 < "$RL_SRC/files/mininet/01-stlcpy-fixes.patch"
 	patch -p1 < "$MININET_DEST/util/openflow-patches/controller.patch"
 	# build & install
 	./boot.sh
 	./configure
-	make && make install
+	# ofc. we need some hacks to compile 15 years old code...
+	CFLAGS=" -Wstrict-prototypes -fomit-frame-pointer "
+	CFLAGS+=" -Wno-incompatible-pointer-types -Wno-implicit-function-declaration -fomit-frame-pointer "
+	make AM_CFLAGS="$CFLAGS"
+	make install
 )
 
 # install global mn wrappers to invoke mininet's virtualenv
