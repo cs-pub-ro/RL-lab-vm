@@ -1,7 +1,0 @@
--
-  name: Install ONOS
-  hosts: rl_base_node
-  tasks:
-    - name: "Debug"
-      debug:
-        msg: "Install ONOS"

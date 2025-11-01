@@ -1,7 +1,0 @@
--
-  name: Install RYU
-  hosts: rl_base_node
-  tasks:
-    - name: "Debug"
-      debug:
-        msg: "Install RYU"

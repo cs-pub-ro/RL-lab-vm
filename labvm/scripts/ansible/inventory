@@ -1,6 +1,0 @@
-[rl_base_node]
-#MANUAL: apt install ansible, change 
-# if shared folder mounted read-only: https://stackoverflow.com/questions/31318881/how-do-you-stop-ansible-from-creating-retry-files-in-the-home-directory
-# if there is a need to import playbooks after cloning: TBD (https://stackoverflow.com/questions/52334454/run-playbook-from-git-repo-cloned-during-playbook-execution)
-
-localhost
