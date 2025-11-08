@@ -18,8 +18,8 @@ function _install_home_config() {
 	COMPONENTS=(-nvim)
 	"$RL_SRC/files/labvm-dotfiles/install.sh" "${COMPONENTS[@]}"
 
-	ln -sf "$RL_SRC/files/opt/rl/functions.sh" "$HOME/.config/bash/config.local.sh"
-	ln -sf "$RL_SRC/files/opt/rl/functions.sh" "$HOME/.config/zsh/config.local.zsh"
+	ln -sf "/opt/rl/functions.sh" "$HOME/.config/bash/config.local.sh"
+	ln -sf "/opt/rl/functions.sh" "$HOME/.config/zsh/config.local.zsh"
 }
 
 _exported_script="$(declare -p RL_SRC); $(declare -f _install_home_config)"
