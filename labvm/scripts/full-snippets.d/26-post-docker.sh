@@ -2,6 +2,9 @@
 [[ -n "$__INSIDE_VM_RUNNER" ]] || { echo "Only call within VM runner!" >&2; return 1; }
 # Docker + container utils installation
 
+# mark docker to hold versions
+apt-mark hold docker-ce docker-ce-cli 
+
 # MTU fix for OpenStack VMs
 cat << EOF > /etc/docker/daemon.json
 {
