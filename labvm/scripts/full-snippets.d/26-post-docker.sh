@@ -5,6 +5,15 @@
 # mark docker to hold versions
 apt-mark hold docker-ce docker-ce-cli 
 
+# Systemd start limit tweaks to prevent docker from crashing during provisioning
+mkdir -p /etc/systemd/system/docker.service.d/
+cat << EOF > /etc/systemd/system/docker.service.d/start-limit.conf
+[Unit]
+StartLimitBurst=6
+StartLimitIntervalSec=20
+EOF
+sudo systemctl daemon-reload
+
 # MTU fix for OpenStack VMs
 cat << EOF > /etc/docker/daemon.json
 {
