@@ -14,3 +14,6 @@ else
 	rm -f "/etc/ssh/sshd_config.d/20-admin-auth.conf"
 fi
 
+# disable reboot from OpenStack's console CtrlAltDel btn
+systemctl mask "ctrl-alt-del.target"
+
