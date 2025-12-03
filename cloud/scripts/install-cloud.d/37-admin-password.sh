@@ -16,4 +16,6 @@ fi
 
 # disable reboot from OpenStack's console CtrlAltDel btn
 systemctl mask "ctrl-alt-del.target"
+# also disable force reboot on burst presses
+sed -i -E 's/^#?CtrlAltDelBurstAction=.*/CtrlAltDelBurstAction=none/' /etc/systemd/system.conf
 
